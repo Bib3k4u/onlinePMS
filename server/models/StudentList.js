@@ -1,43 +1,43 @@
 const { DataTypes } = require('sequelize');
 
 const StudentList = (sequelize) => {
-  return sequelize.define('StudentList', {
-    EnrollmentNumber: {
+  return sequelize.define('studentList', {
+    enrollmentNumber: {
       type: DataTypes.STRING,
       primaryKey: true,
       allowNull: false,
     },
-    AdmissionNumber: {
+    admissionNumber: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
     },
-    Name: {
+    nameOfStudent: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    Branch: {
+    branch: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    Year: {
+    year: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    Semester: {
+    semester: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    Contact: {
+    contact: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    ProjectID: {
-      type: DataTypes.INTEGER,
+    projectID: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
   }, {
-    tableName: 'StudentList', // Explicitly specify the table name
+    tableName: 'studentList', // Explicitly specify the table name
   });
 };
 

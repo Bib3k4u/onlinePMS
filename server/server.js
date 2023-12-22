@@ -6,7 +6,9 @@ const StudentList = require('./models/StudentList')(sequelize);
 
 const app = express();
 const port = process.env.PORT || 3001;
-
+const Excel = require('exceljs')
+const wb = new Excel.Workbook();
+const path = 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -14,7 +16,11 @@ app.use(cors());
 // Get all students
 app.get('/students', async (req, res) => {
   try {
-    const students = await StudentList.findAll();
+    const students = await StudentList.findAll(
+      {
+        attributes:['nameOfStudent','year']
+      }
+    );
     res.json(students);
   } catch (error) {
     console.error('Error fetching students:', error);
