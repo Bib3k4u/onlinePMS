@@ -7,7 +7,7 @@ const multer = require('multer');
 const xlsx = require('xlsx');
 const app = express();
 const port = process.env.PORT || 3001;
-
+var dataTime = new Date();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -32,16 +32,24 @@ app.get('/studentsData', async (req, res) => {
 // Add a new student
 app.post('/sdUpload', upload.single('file'), async (req, res) => {
   try {
-    const buffer = req.file.buffer;
-    const wb = xlsx.read(buffer, { type: 'buffer' });
-    const sheetName = wb.SheetNames[0];
-    const sheet = wb.Sheets[sheetName];
-    const data = xlsx.utils.sheet_to_json(sheet);
-    await sequelize.sync();
-    if(buffer ==null){
-      const {data} = req.body;
+    let data;
+
+    if (req.file) {
+      const buffer = req.file.buffer;
+      const wb = xlsx.read(buffer, { type: 'buffer' });
+      const sheetName = wb.SheetNames[0];
+      const sheet = wb.Sheets[sheetName];
+      data = xlsx.utils.sheet_to_json(sheet);
+    } else if (req.body) {
+      // Use the data from req.body if no file is uploaded
+      data = [req.body];
       console.log(data);
+    } else {
+      throw new Error('No data provided');
     }
+
+    await sequelize.sync();
+
     await Promise.all(
       data.map(async (row) => {
         try {
@@ -52,13 +60,13 @@ app.post('/sdUpload', upload.single('file'), async (req, res) => {
               admissionNumber: row.admissionNumber,
               nameOfStudent: row.nameOfStudent,
               branch: row.branch,
-              year: row.year,
-              semester: row.semester,
+              year: parseInt(row.year),
+              semester: parseInt(row.semester),
               contact: row.contact,
-              email:row.email,
+              email: row.email,
               projectID: row.projectID,
-              createdAt: row.createdAt,
-              updatedAt: row.updatedAt,
+              createdAt: sequelize.literal('CURRENT_TIMESTAMP'),
+              updatedAt: sequelize.literal('CURRENT_TIMESTAMP'),
             },
           });
 
@@ -77,6 +85,7 @@ app.post('/sdUpload', upload.single('file'), async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 // Sync the model with the database and start the server
 StudentList.sync().then(() => {
