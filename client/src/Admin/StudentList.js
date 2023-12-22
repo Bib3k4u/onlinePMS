@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AdminNav from './Components/AdminNav';
 import FetchedStudentData from './Components/FetchedStudentData';
+import AddingStudentManually from './Components/AddingStudentManualy';
 
 const StudentList = () => {
   const [file, setFile] = useState(null);
@@ -72,7 +73,7 @@ const StudentList = () => {
           </button>
         </div>
       </div>
-
+   <AddingStudentManually />
       {/* Rest of your component */}
       <FetchedStudentData />
     </>
