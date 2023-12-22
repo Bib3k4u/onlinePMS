@@ -60,10 +60,10 @@ function FetchedStudentData() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button className="bg-blue-500 text-white py-2 mr-4 px-4 rounded-md" onClick={handleSearch}>
+          <button className="bg-color1 text-black hover:bg-blue-400  text- py-2 mr-4 px-4 rounded-md" onClick={handleSearch}>
             Search
           </button>
-          <button className="bg-blue-500 text-white py-2 px-4 rounded-md" onClick={handleToggleFilterAlphabetically}>
+          <button className="bg-color1 text-black hover:bg-blue-400 py-2 px-4 rounded-md" onClick={handleToggleFilterAlphabetically}>
             {isFiltered ? 'Clear Filter' : 'Sort by Name'}
           </button>
         </div>
@@ -71,7 +71,7 @@ function FetchedStudentData() {
       <div className="overflow-x-auto m-2">
         <table className="min-w-full bg-white shadow-md rounded-md">
           <thead>
-            <tr className="bg-gray-800 text-black">
+            <tr className="bg-color1 text-black">
               <th className="py-3 px-4 text-left">S.N.</th>
               <th className="py-3 px-4 text-left">Enrollment No.</th>
               <th className="py-3 px-4 text-left">Admission No.</th>
@@ -84,7 +84,7 @@ function FetchedStudentData() {
           </thead>
           <tbody>
             {(isFiltered ? filteredData : studentData).map((data, index) => (
-              <tr key={index} className={index % 2 === 0 ? 'bg-gray-100 even:bg-blue-50' : 'odd:bg-gray-200'}>
+              <tr key={index} className={index % 2 === 0 ? 'bg-blue-100 even:bg-blue-50' : 'odd:bg-gray-200'}>
                 <td className="py-2 px-4">{index + 1}</td>
                 <td className="py-2 px-4">{data.enrollmentNumber}</td>
                 <td className="py-2 px-4">{data.admissionNumber}</td>

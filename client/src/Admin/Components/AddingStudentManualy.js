@@ -189,7 +189,7 @@ function AddingStudentManually() {
         <span className="text-gray-700"></span>
         <button
           type="submit"
-          className="bg-blue-500 text-white font-bold mt-1 w-60 h-12   rounded-md hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+          className="bg-color1 text-black hover:bg-blue-400 font-bold mt-1 w-60 h-12   rounded-md  focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
         >
           Add Student
         </button>
