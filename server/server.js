@@ -17,12 +17,10 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Get all students
-app.get('/students', async (req, res) => {
+app.get('/studentsData', async (req, res) => {
   try {
     const students = await StudentList.findAll(
-      {
-        attributes:['nameOfStudent','year']
-      }
+
     );
     res.json(students);
   } catch (error) {
@@ -40,7 +38,10 @@ app.post('/sdUpload', upload.single('file'), async (req, res) => {
     const sheet = wb.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(sheet);
     await sequelize.sync();
-
+    if(buffer ==null){
+      const {data} = req.body;
+      console.log(data);
+    }
     await Promise.all(
       data.map(async (row) => {
         try {
@@ -54,6 +55,7 @@ app.post('/sdUpload', upload.single('file'), async (req, res) => {
               year: row.year,
               semester: row.semester,
               contact: row.contact,
+              email:row.email,
               projectID: row.projectID,
               createdAt: row.createdAt,
               updatedAt: row.updatedAt,
