@@ -1,8 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import AdminNav from './Components/AdminNav';
 
 const StudentList = () => {
-  
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
+
+  const handleUploadClick = async () => {
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      await axios.post('http://localhost:3001/sdUpload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log('File uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading File', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -21,6 +49,7 @@ const StudentList = () => {
             accept=".xlsx"
             cursor="pointer"
             className="mt-1 cursor-pointer p-2 rounded-md w-full bg-color2 text-color3"
+            onChange={handleFileChange}
           />
         </div>
 
@@ -36,16 +65,15 @@ const StudentList = () => {
           </button>
           <button
             className="bg-color3 hover:bg-color2 text-black px-4 py-2 rounded-md"
-            onClick={() => {
-              alert('Upload to Database button clicked');
-            }}
+            onClick={handleUploadClick}
+            disabled={!file || loading} // Disable the button if no file is selected or if loading
           >
-            Upload to Database
+            {loading ? 'Uploading...' : 'Upload to Database'}
           </button>
         </div>
       </div>
 
-
+      {/* Rest of your component */}
       <div className="w-full mx-auto mt-8">
         <table className="w-full bg-white border border-gray-300 rounded-md">
           <thead>
