@@ -1,27 +1,27 @@
 {
     "development": {
         "username": "root",
-        "password": "Arjun@5854",
+        "password": "root",
         "database": "Testing",
         "host": "localhost",
         "dialect": "mysql",
         "operators": false
     },
     "test": {
-        "username": "root",
-        "password": "Arjun@5854",
-        "database": "Testing",
-        "host": "localhost",
-        "dialect": "mysql",
-        "operators": false
-    },
-    "production": {
       "username": "root",
-      "password": "Arjun@5854",
+      "password": "root",
       "database": "Testing",
       "host": "localhost",
       "dialect": "mysql",
       "operators": false
+    },
+    "production": {
+      "username": "root",
+        "password": "root",
+        "database": "Testing",
+        "host": "localhost",
+        "dialect": "mysql",
+        "operators": false
     }
   }
   
