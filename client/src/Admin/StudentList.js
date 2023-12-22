@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AdminNav from './Components/AdminNav';
+import FetchedStudentData from './Components/FetchedStudentData';
 
 const StudentList = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
@@ -17,7 +17,7 @@ const StudentList = () => {
 
       const formData = new FormData();
       formData.append('file', file);
-
+      
       await axios.post('http://localhost:3001/sdUpload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -31,7 +31,7 @@ const StudentList = () => {
       setLoading(false);
     }
   };
-
+ 
   return (
     <>
       <AdminNav />
@@ -66,7 +66,7 @@ const StudentList = () => {
           <button
             className="bg-color3 hover:bg-color2 text-black px-4 py-2 rounded-md"
             onClick={handleUploadClick}
-            disabled={!file || loading} // Disable the button if no file is selected or if loading
+            // disabled={!file || loading} // Disable the button if no file is selected or if loading
           >
             {loading ? 'Uploading...' : 'Upload to Database'}
           </button>
@@ -74,21 +74,7 @@ const StudentList = () => {
       </div>
 
       {/* Rest of your component */}
-      <div className="w-full mx-auto mt-8">
-        <table className="w-full bg-white border border-gray-300 rounded-md">
-          <thead>
-            <tr className='flex justify-around'>
-              <th>Enrollment Number</th>
-              <th>Admission Number</th>
-              <th>Name</th>
-              <th>Branch</th>
-              <th>Year</th>
-              <th>Semester</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
+      <FetchedStudentData />
     </>
   );
 };

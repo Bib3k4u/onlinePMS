@@ -32,6 +32,10 @@ const StudentList = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    email:{
+      type:DataTypes.STRING,
+      allowNull:false,
+    },
     projectID: {
       type: DataTypes.STRING,
       allowNull: true,
