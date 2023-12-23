@@ -17,30 +17,43 @@ const StudentList = () => {
 
   const handleUploadClick = async () => {
     try {
+      if (!file) {
+        // If no file is selected, show an error toast and return
+        toast.error('Please choose a file before uploading.', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        return;
+      }
+  
       setLoading(true);
-
+  
       const formData = new FormData();
       formData.append('file', file);
-
+  
       await axios.post('http://localhost:3001/sdUpload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+  
       toast.success('File uploaded successfully', {
-        position: 'bottom-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
+        position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
       });
-
+  
       console.log('File uploaded successfully');
     } catch (error) {
       console.error('Error uploading File', error);
-
+  
       toast.error('Error uploading file. Please try again.', {
         position: 'top-right',
         autoClose: 3000,
@@ -53,6 +66,7 @@ const StudentList = () => {
       setLoading(false);
     }
   };
+  
 
   const handleStudentAdded = async (newStudentData) => {
     try {
@@ -102,19 +116,21 @@ const StudentList = () => {
             Choose Excel File (.xlsx)
           </label>
           <input
-            type="file"
-            id="fileInput"
-            accept=".xlsx"
-            cursor="pointer"
-            className="bg-color1 text-black cursor-pointer p-2 w-full"
-            onChange={handleFileChange}
-          />
+    type="file"
+    id="fileInput"
+    required  // <-- Remove "true" from here
+    accept=".xlsx"
+    cursor="pointer"
+    className="bg-color1 text-black cursor-pointer p-2 w-full"
+    onChange={handleFileChange}
+    title="Please choose an Excel file (.xlsx)"  // <-- Add a title attribute for more clarity
+  />
         </div>
 
         {/* Show and Upload Buttons */}
         <div className="flex space-x-4">
           <button
-            className="bg-[#4A4A4A] text-color1 hover:bg-gray-400 shadow-lg hover:shadow-2xl hover:text-black px-4 py-2 w-full"
+            className="bg-blue-200 text-black hover:bg-blue-400 w-full rounded-md shadow-lg hover:shadow-2xl hover:text-black px-4 py-2"
             onClick={handleUploadClick}
           >
             {loading ? 'Uploading...' : 'Upload to Database'}

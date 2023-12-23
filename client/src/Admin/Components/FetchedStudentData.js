@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // ... (existing imports)
 
-function FetchedStudentData() {
+export default function FetchedStudentData() {
   const [studentData, setStudentData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
@@ -101,5 +101,3 @@ function FetchedStudentData() {
     </div>
   );
 }
-
-export default FetchedStudentData;
