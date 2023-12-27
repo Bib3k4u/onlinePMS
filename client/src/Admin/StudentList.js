@@ -18,7 +18,6 @@ const StudentList = () => {
   const handleUploadClick = async () => {
     try {
       if (!file) {
-        // If no file is selected, show an error toast and return
         toast.error('Please choose a file before uploading.', {
           position: 'top-right',
           autoClose: 3000,
@@ -70,10 +69,7 @@ const StudentList = () => {
 
   const handleStudentAdded = async (newStudentData) => {
     try {
-      // Make a request to add the student to the database (modify this as needed)
-      // await axios.post('http://localhost:3001/addStudent', newStudentData);
 
-      // Assuming the request is successful, trigger a success toast
       toast.success('Student added successfully', {
         position: 'bottom-right',
         autoClose: 3000,
@@ -83,9 +79,6 @@ const StudentList = () => {
         draggable: true,
       });
 
-      // Automatically refetch data from the database after adding a student
-      // Add your logic for fetching data here (modify this as needed)
-      // await fetchData();
 
       console.log('Student added successfully');
     } catch (error) {
@@ -138,7 +131,6 @@ const StudentList = () => {
         </div>
       </div>
 
-      {/* Pass the handleStudentAdded function to the AddingStudentManually component */}
       <AddingStudentManually onStudentAdded={handleStudentAdded} />
 
       {/* Rest of your component */}
