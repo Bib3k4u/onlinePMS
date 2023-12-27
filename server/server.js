@@ -86,6 +86,48 @@ app.post('/sdUpload', upload.single('file'), async (req, res) => {
   }
 });
 
+// testing
+// Add this endpoint to your Express app
+// Add this endpoint to your Express app
+app.get('/enrollmentNumbers', async (req, res) => {
+  try {
+    const enrollmentNumbers = await StudentList.findAll({
+      attributes: ['enrollmentNumber'],
+      raw: true,
+    });
+
+    const numbers = enrollmentNumbers.map((student) => student.enrollmentNumber);
+
+    res.json(numbers);
+  } catch (error) {
+    console.error('Error fetching enrollment numbers:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+// Endpoint to get student details based on enrollment number
+app.get('/studentDetails/:enrollmentNumber', async (req, res) => {
+  try {
+    const enrollmentNumber = req.params.enrollmentNumber;
+
+    const studentDetails = await StudentList.findOne({
+      where: { enrollmentNumber: enrollmentNumber },
+    });
+
+    if (!studentDetails) {
+      res.status(404).json({ error: 'Student not found' });
+    } else {
+      res.json(studentDetails);
+    }
+  } catch (error) {
+    console.error('Error fetching student details:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 // Sync the model with the database and start the server
 StudentList.sync().then(() => {

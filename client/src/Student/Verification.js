@@ -1,36 +1,37 @@
+import emailjs from '@emailjs/browser';
 import React, { useRef, useState, useEffect } from 'react';
-import emailjs from 'emailjs-com';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const VerificationComponent = ({ studentDetails1, studentDetails2 }) => {
-  const form = useRef();
-  const [verificationCode, setVerificationCode] = useState('');
-  const [enteredCode, setEnteredCode] = useState('');
-  const [isCodeVerified, setIsCodeVerified] = useState(false);
-  const emailValue = studentDetails1?.email ?? ''; 
-  const emailValue1 = studentDetails2?.email ?? ''; 
-
-  useEffect(() => {
-    generateVerificationCode();
-  }, []); // Run once on component mount to generate the initial verification code
-
-  const generateVerificationCode = () => {
-    const code = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit code
-    setVerificationCode(code);
-  };
+export const Verification = ({studentDetails1}) => {
+    const form = useRef();
+    const [verificationCode, setVerificationCode] = useState('');
+    const [enteredCode, setEnteredCode] = useState('');
+    const [isCodeVerified, setIsCodeVerified] = useState(false);
+ 
+  
+    useEffect(() => {
+      generateVerificationCode();
+    }, []); // Run once on component mount to generate the initial verification code
+  
+    const generateVerificationCode = () => {
+      const code = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit code
+      setVerificationCode(code);
+    };
 
   const sendEmail = (e) => {
     e.preventDefault();
 
-    const templateParams = {
-      to_email: e.target.to_email.value,
-      subject: 'Verification Code',
-      message: `Your verification code is: ${verificationCode}`,
+    const emailParams = {
+      to_email: studentDetails1.email,
+      from_email: 'bibek.20scse1010849@galgotiasuniversity.edu.in',
+      message: `Your verification code for Project Registration is: ${verificationCode}`,
     };
 
+    console.log('Sending email with params:', emailParams);
+
     emailjs
-      .send('service_amfjtue', 'template_160nyyz', templateParams, '4Qd-bmC-JcWanF_4z')
+      .send('service_nnzh19f', 'template_4mqrnba', emailParams, '-L5otkMq3v6AAnlP1')
       .then((result) => {
         console.log(result.text);
         form.current.reset();
@@ -72,7 +73,8 @@ const VerificationComponent = ({ studentDetails1, studentDetails2 }) => {
         <input
           type="email"
           name="to_email"
-          value={emailValue || emailValue1}
+          value={studentDetails1.email}
+          readOnly
           className="w-full px-3 py-2 placeholder-gray-400 border rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400"
         />
         <button
@@ -107,4 +109,3 @@ const VerificationComponent = ({ studentDetails1, studentDetails2 }) => {
   );
 };
 
-export default VerificationComponent;

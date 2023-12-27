@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
 import StudentNav from './Components/StudentNav';
-import VerificationComponent from './VerificationComponent';
+import { Verification2 } from './Verification2';
+import { Verification } from './Verification';
 
 const App = () => {
   const [enrollmentOptions, setEnrollmentOptions] = useState([]);
@@ -96,8 +97,7 @@ const App = () => {
               <p>Year: {studentDetails1.year}</p>
               <p>Contact: {studentDetails1.contact}</p>
               <p>Email: {studentDetails1.email}</p>
-              {/* Add other Student 1 details here */}
-              <VerificationComponent studentDetails1={studentDetails1} />
+              <Verification studentDetails1={studentDetails1}/>
             </div>
           )}
         </div>
@@ -127,8 +127,7 @@ const App = () => {
               <p>Year: {studentDetails2.year}</p>
               <p>Contact: {studentDetails2.contact}</p>
               <p>Email: {studentDetails2.email}</p>
-              {/* Add other Student 2 details here */}
-              <VerificationComponent studentDetails2={studentDetails2} />
+              <Verification2 studentDetails2={studentDetails2}/>
             </div>
           )}
         </div>
@@ -140,3 +139,6 @@ const App = () => {
 };
 
 export default App;
+
+
+
