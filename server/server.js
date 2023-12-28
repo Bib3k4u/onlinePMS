@@ -1,13 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+
 const sequelize = require('./sequelize');
+const { Sequelize,Op } = require('sequelize');
+
 const StudentList = require('./models/StudentList')(sequelize);
+const ProjectList = require('./models/ProjectList')(sequelize);
+const ProjectIDList = require('./models/ProjectId')(sequelize);
 const multer = require('multer');
 const xlsx = require('xlsx');
 const app = express();
 const port = process.env.PORT || 3001;
-var dataTime = new Date();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
@@ -25,6 +29,29 @@ app.get('/studentsData', async (req, res) => {
     res.json(students);
   } catch (error) {
     console.error('Error fetching students:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+app.get('/projectsData/:year', async (req, res) => {
+  try {
+    // Assuming 'columnName' is the name of the column you want to check the third character for
+    const columnName = 'projectId';
+    const value = req.params.year;
+    console.log(value);
+    const projects = await ProjectList.findAll({
+      attributes:[columnName],
+      where: {
+         [columnName] :{
+
+         [Op.startsWith]:value}
+      },
+      order: [['projectId', 'DESC']],
+      limit: 1
+    });
+
+    res.json(projects);
+  } catch (error) {
+    console.error('Error fetching projects:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -130,7 +157,7 @@ app.get('/studentDetails/:enrollmentNumber', async (req, res) => {
 
 
 // Sync the model with the database and start the server
-StudentList.sync().then(() => {
+sequelize.sync().then(() => {
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });

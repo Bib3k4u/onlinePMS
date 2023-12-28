@@ -1,27 +1,26 @@
 {
-    "development": {
-        "username": "root",
-        "password": "root",
-        "database": "Testing",
-        "host": "localhost",
-        "dialect": "mysql",
-        "operators": false
-    },
-    "test": {
+  "development": {
       "username": "root",
-      "password": "root",
+      "password": "Arjun@5854",
       "database": "Testing",
       "host": "localhost",
       "dialect": "mysql",
       "operators": false
-    },
-    "production": {
+  },
+  "test": {
       "username": "root",
-        "password": "root",
-        "database": "Testing",
-        "host": "localhost",
-        "dialect": "mysql",
-        "operators": false
-    }
+      "password": "Arjun@5854",
+      "database": "Testing",
+      "host": "localhost",
+      "dialect": "mysql",
+      "operators": false
+  },
+  "production": {
+    "username": "root",
+    "password": "Arjun@5854",
+    "database": "Testing",
+    "host": "localhost",
+    "dialect": "mysql",
+    "operators": false
   }
-  
+}
