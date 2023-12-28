@@ -80,8 +80,8 @@ function AddingStudentManually() {
   };
 
   return (
-    <div className="container mx-auto mt-8">
-      <h2 className="text-2xl font-bold mb-4 flex justify-center">Add Student Manually</h2>
+    <div className="container mx-auto mt-8 bg-cardColor text-black cardShadow rounded-md">
+      <h2 className="text-2xl font-bold pt-2 mb-4 flex justify-center">Add Student Manually</h2>
       <form onSubmit={handleSubmit} className="w-full  mx-auto">
         <div className='flex flex-col md:flex-row lg:flex-row xl:flex-row justify-around'>
         <label className="block mb-4">
@@ -189,7 +189,7 @@ function AddingStudentManually() {
         <span className="text-gray-700"></span>
         <button
           type="submit"
-          className="bg-color1 text-black hover:bg-blue-400 font-bold mt-1 w-60 h-12   rounded-md  focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+          className="bg-button text-textColor hover:bg-hoverButton font-semibold tracking-wider mt-1 w-60 h-12 rounded-md"
         >
           Add Student
         </button>

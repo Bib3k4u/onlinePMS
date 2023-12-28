@@ -1,12 +1,12 @@
 import React from 'react'
-// import { Verification } from './Student/Verification'
+import { Verification } from './Student/Verification'
 import GroupRegistrationForm from './Student/GroupRegistrationForm'
-// import StudentList from './Admin/StudentList'
+import StudentList from './Admin/StudentList'
 
 const App = () => {
   return (
-    <GroupRegistrationForm/>
-    // <StudentList/>
+    // <GroupRegistrationForm/>
+    <StudentList/>
     // <Verification/>
   )
 }

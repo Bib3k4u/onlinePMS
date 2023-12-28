@@ -4,9 +4,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        color1: '#6699CC',
-        
-
+        bgColor:'#5955B3',
+        textColor :'#FDFDFF',
+        cardColor:'#F4F4FE',
+        hoverButton:'#807EE3',
+        button:'#5854B3'
       },
     },
   },

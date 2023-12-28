@@ -49,8 +49,10 @@ export default function FetchedStudentData() {
   };
 
   return (
-    <div className="w-full mx-auto mt-8 ">
-      <div className="mb-4">
+    <div className="w-full mx-auto mt-16 ">
+      <div className='flex justify-center font-semibold text-2xl pt-4 pb-4 bg-bgColor text-textColor'>Student List</div>
+      <div className="mb-4 mt-4 flex justify-start md:justify-end xl:justify-end lg:justify-end mr-2">
+        
         <div className="flex  items-center mb-2 ml-4">
           <input
             type="text"
@@ -59,10 +61,10 @@ export default function FetchedStudentData() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button className="bg-color1 text-black hover:bg-blue-400  text- py-2 mr-4 px-4 rounded-md" onClick={handleSearch}>
+          <button className="bg-button text-textColor hover:bg-hoverButton tracking-wider py-2 mr-4 px-4 rounded-md" onClick={handleSearch}>
             Search
           </button>
-          <button className="bg-color1 text-black hover:bg-blue-400 py-2 px-4 rounded-md" onClick={handleToggleFilterAlphabetically}>
+          <button className="bg-button text-textColor hover:bg-hoverButton tracking-wider py-2 px-4 rounded-md" onClick={handleToggleFilterAlphabetically}>
             {isFiltered ? 'Clear Filter' : 'Sort by Name'}
           </button>
         </div>

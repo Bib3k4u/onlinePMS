@@ -67,9 +67,9 @@ const App = () => {
 
 
   return (
-    <div className="h-auto min-h-screen flex flex-col md:flex-row items-center justify-center bg-color1 text-black">
+    <div className="h-auto min-h-screen flex flex-col md:flex-row items-center justify-center bg-color1 text-textColor">
       <StudentNav />
-      <div className="w-full max-w-5xl p-6 mt-20 rounded bg-white md:flex md:flex-wrap">
+      <div className="w-full max-w-5xl cardShadow p-6 mt-20 rounded bg-cardColor text-black md:flex md:flex-wrap">
         <div className="md:w-1/2 md:pr-4 mb-8">
           <h1 className="text-2xl font-bold mb-4">Student 1 Registration</h1>
           {loading && <p>Loading Data...</p>}

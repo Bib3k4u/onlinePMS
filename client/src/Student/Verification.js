@@ -79,7 +79,7 @@ export const Verification = ({studentDetails1}) => {
         />
         <button
           type="submit"
-          className="mt-4 w-full bg-blue-400 text-white p-2 rounded-md hover:bg-blue-500 focus:outline-none focus:ring focus:border-blue-300"
+          className="mt-4 w-full bg-button text-white p-2 rounded-md hover:bg-hoverButton focus:outline-none focus:ring focus:border-blue-300"
         >
           Send Verification Code
         </button>
@@ -99,7 +99,7 @@ export const Verification = ({studentDetails1}) => {
           />
           <button
             onClick={verifyCode}
-            className="mt-4 w-full bg-blue-400 text-white p-2 rounded-md hover:bg-blue-500 focus:outline-none focus:ring focus:border-blue-300"
+            className="mt-4 w-full bg-button text-white p-2 rounded-md hover:bg-hoverButton focus:outline-none focus:ring focus:border-blue-300"
           >
             Verify
           </button>
