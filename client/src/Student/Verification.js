@@ -2,12 +2,12 @@ import emailjs from '@emailjs/browser';
 import React, { useRef, useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useEmailValidateState } from '../StateManagements/EmailValidState';
 export const Verification = ({studentDetails1}) => {
+    const {emailValidFirst,setEmailValidForStudent1}  = useEmailValidateState();
     const form = useRef();
     const [verificationCode, setVerificationCode] = useState('');
     const [enteredCode, setEnteredCode] = useState('');
-    const [isCodeVerified, setIsCodeVerified] = useState(false);
  
   
     useEffect(() => {
@@ -51,13 +51,13 @@ export const Verification = ({studentDetails1}) => {
 
   const verifyCode = () => {
     if (enteredCode === verificationCode) {
-      setIsCodeVerified(true);
+      setEmailValidForStudent1(true);
       toast.success('Verification successful!', {
         autoClose: 5000,
         position: toast.POSITION.TOP_RIGHT,
       });
     } else {
-      setIsCodeVerified(false);
+      setEmailValidForStudent1(false);
       toast.error('Invalid verification code. Please try again.', {
         autoClose: 5000,
         position: toast.POSITION.TOP_RIGHT,
@@ -85,7 +85,7 @@ export const Verification = ({studentDetails1}) => {
         </button>
       </form>
 
-      {isCodeVerified ? (
+      {emailValidFirst ? (
         <p className="mt-4 text-green-700 font-bold">Verification successful!</p>
       ) : (
         <div className="mt-4">
