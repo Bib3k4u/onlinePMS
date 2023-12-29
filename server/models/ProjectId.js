@@ -23,9 +23,6 @@ const ProjectIDList = (sequelize) =>{
             type:DataTypes.STRING,
             allowNull:false,
         }
-    },{
-        tableName:'projectIds',
-    
-    });
+    },);
 }
 module.exports = ProjectIDList;
