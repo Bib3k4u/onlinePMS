@@ -1,0 +1,43 @@
+.oops {
+    margin: 0;
+    padding: 0;
+    background-color: #0a1821;
+    flex: 1;
+    height: 100%;
+    width: 100%;
+    color: #fff;
+    position: relative;
+    text-align: center;
+  
+    & h1 {
+      color: #fff;
+      font-weight: 700;
+      font-size: 40px;
+    }
+  }
+  .starry-sky {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+  .text-container {
+    color: #fff;
+    position: absolute;
+    top: 25px;
+    right: 10%;
+    text-align: right;
+  
+    & .not-found {
+      width: 560px;
+      height: 225px;
+      margin-right: -10px;
+    }
+  }
+  /* change to alternating star opacities */
+  .all-stars {
+    animation: blinkblink 7s linear infinite;
+  }
+  @keyframes blinkblink {
+    50% { opacity: 0.1; }
+  }

@@ -1,7 +1,7 @@
 {
   "development": {
       "username": "root",
-      "password": "Arjun@5854",
+      "password": "root",
       "database": "Testing",
       "host": "localhost",
       "dialect": "mysql",
@@ -9,7 +9,7 @@
   },
   "test": {
       "username": "root",
-      "password": "Arjun@5854",
+      "password": "root",
       "database": "Testing",
       "host": "localhost",
       "dialect": "mysql",
@@ -17,7 +17,7 @@
   },
   "production": {
     "username": "root",
-    "password": "Arjun@5854",
+    "password": "root",
     "database": "Testing",
     "host": "localhost",
     "dialect": "mysql",

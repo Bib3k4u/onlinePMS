@@ -1,4 +1,4 @@
-import React from 'react'
+
 import{BrowserRouter as Router,Route,Routes} from 'react-router-dom';
 // import { Verification } from './Student/Verification'
 import GroupRegistrationForm from './Student/GroupRegistrationForm'
@@ -8,7 +8,6 @@ import PageNotFound from './Pages/PageNotFound';
 
 const App = () => {
   return (
-
     <Router>
       <Routes>
         <Route path="/"element={<Home />} />

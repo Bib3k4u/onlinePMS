@@ -100,7 +100,7 @@ const StudentList = () => {
       <ToastContainer />
 
       <AdminNav />
-      <div className="max-w-md mx-auto mt-20 p-6 bg-color1 rounded-md shadow-md">
+      <div className="max-w-md mx-auto mt-20 p-6 bg-cardColor cardShadow rounded-md shadow-md">
         <h2 className="text-2xl bg-color1 text-black font-semibold mb-4">Upload Student List</h2>
 
         {/* File Input */}
@@ -123,13 +123,29 @@ const StudentList = () => {
         {/* Show and Upload Buttons */}
         <div className="flex space-x-4">
           <button
-            className="bg-blue-200 text-black hover:bg-blue-400 w-full rounded-md shadow-lg hover:shadow-2xl hover:text-black px-4 py-2"
+            className="bg-button buttonShadow text-textColor hover:bg-hoverButton w-full rounded-md shadow-lg hover:shadow-2xl px-4 py-2"
             onClick={handleUploadClick}
           >
             {loading ? 'Uploading...' : 'Upload to Database'}
           </button>
         </div>
       </div>
+      
+      <div className='flex m-10 justify-center items-center'>
+  <div className='flex-1'>
+    <div style={{ height: '2px' }} className='bg-gray-300'></div>
+  </div>
+  
+  <div className='flex-0 ml-4 mr-4 font-bold'>
+    <h2>Or</h2>
+  </div>
+  
+  <div className='flex-1'>
+    <div style={{ height: '2px' }} className='bg-gray-300'></div>
+  </div>
+</div>
+
+
 
       <AddingStudentManually onStudentAdded={handleStudentAdded} />
 

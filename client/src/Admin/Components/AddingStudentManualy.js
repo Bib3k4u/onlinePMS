@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Select from 'react-select';
 
 function AddingStudentManually() {
   const [studentData, setStudentData] = useState({
@@ -7,49 +10,57 @@ function AddingStudentManually() {
     admissionNumber: '',
     nameOfStudent: '',
     branch: '',
-    year: '',
-    semester: '',
+    year: null,
+    semester: null,
     contact: '',
     email: '',
     projectId: '',
+    isYearSelected: false,
+    visibleSemesters: [],
   });
 
-  const [semesters, setSemesters] = useState([]);
-  
-  useEffect(() => {
-    // Fetch semesters based on the selected year
-    if (studentData.year) {
-      // Assuming semesters are fetched from the server based on the selected year
-      // Adjust the API endpoint or fetch logic based on your server implementation
-      axios.get(`http://localhost:3001/semesters/${studentData.year}`)
-        .then(response => {
-          setSemesters(response.data);
-        })
-        .catch(error => {
-          console.error('Error fetching semesters:', error);
-        });
+  const optionsYear = [
+    { value: 1, label: '1' },
+    { value: 2, label: '2' },
+    { value: 3, label: '3' },
+    { value: 4, label: '4' },
+  ];
+
+  const optionsSemester = studentData.visibleSemesters.map((sem) => ({
+    value: sem,
+    label: sem.toString(),
+  }));
+
+  const handleChange = (value, field) => {
+    let isYearSelected = false;
+    let visibleSemesters = [];
+
+    if (field === 'year') {
+      isYearSelected = true;
+
+      if (value === 1) {
+        visibleSemesters = [1, 2];
+      } else if (value === 2) {
+        visibleSemesters = [3, 4];
+      } else if (value === 3) {
+        visibleSemesters = [5, 6];
+      } else if (value === 4) {
+        visibleSemesters = [7, 8];
+      }
+
+      setStudentData((prevData) => ({
+        ...prevData,
+        [field]: value,
+        isYearSelected,
+        visibleSemesters,
+        semester: null,
+      }));
     } else {
-      setSemesters([]);
+      setStudentData((prevData) => ({
+        ...prevData,
+        [field]: value,
+      }));
     }
-  }, [studentData.year]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    // Validation logic
-    let validatedValue = value;
-    if (name === 'enrollmentNumber' || name === 'year' || name === 'semester' || name === 'contact') {
-      validatedValue = parseInt(value, 10); // Convert to integer
-    }
-
-    if (name === 'admissionNumber' || name === 'branch' || name === 'nameOfStudent' || name === 'email' || name === 'projectId') {
-      // No specific validation for string fields
-    }
-
-    setStudentData((prevData) => ({
-      ...prevData,
-      [name]: validatedValue,
-    }));
   };
 
   const handleSubmit = async (e) => {
@@ -58,144 +69,195 @@ function AddingStudentManually() {
     try {
       // Make an API request to save the student data
       await axios.post('http://localhost:3001/sdUpload', studentData);
-
-      // Reset the form after successful submission
+      toast.success('Student added successfully!');
       setStudentData({
         enrollmentNumber: '',
         admissionNumber: '',
         nameOfStudent: '',
         branch: '',
-        year: '',
-        semester: '',
+        year: null,
+        semester: null,
         contact: '',
         email: '',
         projectId: '',
+        isYearSelected: false,
+        visibleSemesters: [],
       });
-
-      // Optionally, you can add a success message or redirect the user
     } catch (error) {
       console.error('Error adding student:', error);
-      // Handle error, show error message, etc.
+      toast.error('Error adding student. Please try again.');
     }
   };
 
+  const branchOptions = [
+    { value: 'CSE', label: 'CSE' },
+    { value: 'BCA', label: 'BCA' },
+    { value: 'MCA', label: 'MCA' },
+    { value: 'MTECH', label: 'MTECH' },
+  ];
+
   return (
-    <div className="container mx-auto mt-8">
-      <h2 className="text-2xl font-bold mb-4 flex justify-center">Add Student Manually</h2>
-      <form onSubmit={handleSubmit} className="w-full  mx-auto">
+    <div className="container mx-auto mt-8 bg-cardColor text-black cardShadow rounded-md">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <h2 className="text-2xl font-bold pt-2 mb-4 flex justify-center">Add Student Manually</h2>
+      <form onSubmit={handleSubmit} className="w-full mx-auto">
         <div className='flex flex-col md:flex-row lg:flex-row xl:flex-row justify-around'>
-        <label className="block mb-4">
-          <span className="text-gray-700">Enrollment Number:</span>
-          <input
-            type="text"
-            name="enrollmentNumber"
-            value={studentData.enrollmentNumber}
-            onChange={handleChange}
-            className="form-input mt-1 p-2 border rounded-md border-gray-400 block w-full"
-          />
-        </label>
-
-        <label className="block mb-4">
-          <span className="text-gray-700">Admission Number:</span>
-          <input
-            type="text"
-            name="admissionNumber"
-            value={studentData.admissionNumber}
-            onChange={handleChange}
-            className="form-input mt-1 p-2 border rounded-md border-gray-400 block w-full"
-          />
-        </label>
-
-        <label className="block mb-4">
-          <span className="text-gray-700">Name:</span>
-          <input
-            type="text"
-            name="nameOfStudent"
-            value={studentData.nameOfStudent}
-            onChange={handleChange}
-            className="form-input mt-1 p-2 border rounded-md border-gray-400 block w-full"
-          />
-        </label>
-
-        <label className="block mb-4">
-            <span className="text-gray-700">Year:</span>
+          <label className="block mb-4">
+            <span className="text-gray-700">Enrollment Number:</span>
             <input
-              type="number"
-              name="year"
-              value={studentData.year}
-              onChange={handleChange}
-              className="form-input mt-1 p-2 border rounded-md border-gray-400 block w-full"
+              type="text"
+              required
+              name="enrollmentNumber"
+              value={studentData.enrollmentNumber}
+              onChange={(e) => handleChange(e.target.value, 'enrollmentNumber')}
+              className="form-input mt-1 p-2 border rounded-md border-gray-300 block w-full"
             />
           </label>
 
-        <label className="block mb-4">
-          <span className="text-gray-700">Branch:</span>
-          <input
-            type="text"
-            name="branch"
-            value={studentData.branch}
-            onChange={handleChange}
-            className="form-input mt-1 p-2 border rounded-md border-gray-400 block w-full"
-          />
-        </label>
+          <label className="block mb-4">
+            <span className="text-gray-700">Admission Number:</span>
+            <input
+              type="text"
+              required
+              name="admissionNumber"
+              value={studentData.admissionNumber}
+              onChange={(e) => handleChange(e.target.value, 'admissionNumber')}
+              className="form-input mt-1 p-2 border rounded-md border-gray-300 block w-full"
+            />
+          </label>
+
+          <label className="block mb-4">
+            <span className="text-gray-700">Name:</span>
+            <input
+              type="text"
+              required
+              name="nameOfStudent"
+              value={studentData.nameOfStudent}
+              onChange={(e) => handleChange(e.target.value, 'nameOfStudent')}
+              className="form-input mt-1 p-2 border rounded-md border-gray-300 block w-full"
+            />
+          </label>
+
+          <label className="block mb-4 ">
+            <span className="text-gray-700">Year:</span>
+            <Select
+              required
+              className="text-black w-60 border-gray-400"
+              options={optionsYear}
+              value={optionsYear.find((option) => option.value === studentData.year)}
+              onChange={(selectedOption) => handleChange(selectedOption.value, 'year')}
+              isSearchable={false}
+              styles={{
+                control: (provided, state) => ({
+                  ...provided,
+                  height: '42px',
+                  outline: state.isFocused ? '2px solid black' : 'none',
+                  borderRadius: '7px',
+                  marginTop: '4px'
+                }),
+              }}
+            />
+          </label>
+
+          <label className="block mb-4">
+            <span className="text-gray-700">Semester:</span>
+            <Select
+              required
+              className="text-black w-60"
+              options={optionsSemester}
+              value={optionsSemester.find((option) => option.value === studentData.semester)}
+              onChange={(selectedOption) => handleChange(selectedOption.value, 'semester')}
+              isSearchable={false}
+              styles={{
+                control: (provided, state) => ({
+                  ...provided,
+                  height: '42px',
+                  outline: state.isFocused ? '2px solid black' : 'none',
+                  borderRadius: '7px',
+                  marginTop: '4px'
+                }),
+              }}
+            />
+          </label>
         </div>
 
         <div className='flex flex-col md:flex-row lg:flex-row xl:flex-row justify-around'>
-        <label className="block mb-4">
-          <span className="text-gray-700">Semester:</span>
-          <input
-            type="number"
-            name="semester"
-            value={studentData.semester}
-            onChange={handleChange}
-            className="form-input mt-1 p-2 border rounded-md border-gray-400 block w-full"
-          />
-        </label>
+          <label className="block mb-4 w-60">
+            <span className="text-gray-700">Branch:</span>
+            <Select
+              required
+              className="text-black w-full"
+              options={branchOptions}
+              value={branchOptions.find((option) => option.value === studentData.branch)}
+              onChange={(selectedOption) => handleChange(selectedOption.value, 'branch')}
+              isSearchable={false}
+              styles={{
+                control: (provided, state) => ({
+                  ...provided,
+                  height: '42px',
+                  outline: state.isFocused ? '2px solid black' : 'none',
+                  borderRadius: '7px',
+                  marginTop: '4px'
+                }),
+              }}
+            />
+          </label>
 
-        <label className="block mb-4">
-          <span className="text-gray-700">Contact:</span>
-          <input
-            type="text"
-            name="contact"
-            value={studentData.contact}
-            onChange={handleChange}
-            className="form-input mt-1 p-2 border rounded-md border-gray-400 block w-full"
-          />
-        </label>
+          <label className="block mb-4">
+            <span className="text-gray-700">Contact:</span>
+            <input
+              required
+              type="text"
+              name="contact"
+              value={studentData.contact}
+              onChange={(e) => handleChange(e.target.value, 'contact')}
+              className="form-input mt-1 p-2 border rounded-md border-gray-300 block w-full"
+            />
+          </label>
 
-        <label className="block mb-4">
-          <span className="text-gray-700">Email:</span>
-          <input
-            type="text"
-            name="email"
-            value={studentData.email}
-            onChange={handleChange}
-            className="form-input mt-1 p-2 border rounded-md border-gray-400 block w-full"
-          />
-        </label>
+          <label className="block mb-4">
+            <span className="text-gray-700">Email:</span>
+            <input
+              required
+              type="text"
+              name="email"
+              value={studentData.email}
+              onChange={(e) => handleChange(e.target.value, 'email')}
+              className="form-input mt-1 p-2 border rounded-md border-gray-300 block w-full"
+            />
+          </label>
 
-        <label className="block mb-4">
-          <span className="text-gray-700">Project ID:</span>
-          <input
-            type="text"
-            name="projectId"
-            value={studentData.projectId}
-            onChange={handleChange}
-            className="form-input mt-1 p-2 border rounded-md border-gray-400 block w-full"
-          />
-        </label>
+          <label className="block mb-4">
+            <span className="text-gray-700">Project ID:</span>
+            <input
+              required
+              type="text"
+              name="projectId"
+              value={studentData.projectId}
+              onChange={(e) => handleChange(e.target.value, 'projectId')}
+              className="form-input mt-1 p-2 border rounded-md border-gray-300 block w-full"
+            />
+          </label>
 
-        <label className=" flex justify-center items-center">
-        <span className="text-gray-700"></span>
-        <button
-          type="submit"
-          className="bg-color1 text-black hover:bg-blue-400 font-bold mt-1 w-60 h-12   rounded-md  focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
-        >
-          Add Student
-        </button>
-        </label>
-
-        
+          <label className="flex justify-center items-center">
+            <span className="text-gray-700"></span>
+            <button
+              type="submit"
+              className="bg-button mb-4 text-textColor buttonShadow hover:bg-hoverButton font-semibold tracking-wider mt-1 w-60 h-12 rounded-md"
+            >
+              Add Student
+            </button>
+          </label>
         </div>
       </form>
     </div>

@@ -5,12 +5,12 @@ import StudentNav from './Components/StudentNav';
 import { Verification } from './Verification';
 import StudentRegistration from './StudentRegistration';
 const App = () => {
-  const [generatedProjectID,setgeneratedProjectID] = useState("");
+  const [generatedProjectID, setgeneratedProjectID] = useState("");
 
   const [enrollmentOptions, setEnrollmentOptions] = useState([]);
   const [selectedEnrollment1, setSelectedEnrollment1] = useState('');
   const [studentDetails1, setStudentDetails1] = useState([]);
-  const [enrollments,setEnrollments] =useState([]);
+  const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState(0);
 
@@ -18,7 +18,7 @@ const App = () => {
   const handleSelectedMembersChange = (selectedMembers) => {
     setSelectedMembers(selectedMembers);
   };
-  const handleProjectIdeageneartion =(x) =>{
+  const handleProjectIdeageneartion = (x) => {
     setgeneratedProjectID(x);
   }
   useEffect(() => {
@@ -43,14 +43,14 @@ const App = () => {
   const handleEnrollmentChange1 = async (selectedOption) => {
     try {
       if (selectedOption && !enrollments.includes(selectedOption.value)) {
-       setEnrollments([...enrollments,selectedOption.value]);
+        setEnrollments([...enrollments, selectedOption.value]);
         setLoading(true);
         const response = await axios.get(`http://localhost:3001/studentDetails/${selectedOption.value}`);
-        setStudentDetails1([...studentDetails1,response.data]);
+        setStudentDetails1([...studentDetails1, response.data]);
 
         setLoading(false);
       } else if (selectedOption) {
-        alert('Please select a different enrollment number for Student 1.');
+        alert('Please select a different Enrollment number for each Student');
       }
     } catch (error) {
       console.error('Error fetching student details:', error);
@@ -58,53 +58,53 @@ const App = () => {
   };
 
   const rows = [];
-for (let i = 0; i < selectedMembers; i++) {
+  for (let i = 0; i < selectedMembers; i++) {
     // element in this array. see: https://reactjs.org/docs/lists-and-keys.html
-    rows.push(<>
+    rows.push(<div className='w-full '>
 
-<div className="md:w-1/2 md:pr-4 mb-8">
-          <h1 className="text-2xl font-bold mb-4">Student {i+1} Registration</h1>
-          {loading && <p>Loading Data...</p>}
-          <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2">
-              Select Enrollment Number for Student 1:
-            </label>
-            <Select
-              className="text-black"
-              options={enrollmentOptions}
-              value={enrollmentOptions.find(
-                (option) => option.value === selectedEnrollment1
-              )}
-              onChange={handleEnrollmentChange1}
-              isSearchable
-            />
-          </div>
-          {studentDetails1.length > 0 && (
-            <div>
-              <h2 className="text-lg font-bold mb-2">Student {i+1} Details</h2>
-              <p>Name: {i>studentDetails1.length-1?studentDetails1.nameOfStudent:studentDetails1[i].nameOfStudent}</p>
-              <p>Enrollment Number: {i>studentDetails1.length-1?studentDetails1.enrollmentNumber:studentDetails1[i].enrollmentNumber}</p>
-              <p>Semester: {i>studentDetails1.length-1?studentDetails1.semester:studentDetails1[i].semester}</p>
-              <p>Branch:{i>studentDetails1.length-1?studentDetails1.branch:studentDetails1[i].branch}</p>
-              <p>Year: {i>studentDetails1.length-1?studentDetails1.year:studentDetails1[i].year}</p>
-              <p>Contact: {i>studentDetails1.length-1?studentDetails1.contact:studentDetails1[i].contact}</p>
-              <p>Email: {i>studentDetails1.length-1?studentDetails1.email:studentDetails1[i].email}</p>
-              <Verification studentDetails1={i>studentDetails1.length-1?studentDetails1:studentDetails1[i]}/>
-            </div>
-          )}
-        </div>
-    </>);
-}
+<div className="w-full mt-4 md:pr-4 mb-8  bg-cardColor cardShadow rounded-md p-2">
+  <h1 className="text-2xl font-bold mb-4">Student {i + 1} Registration</h1>
+  {loading && <p>Loading Data...</p>}
+  
+  <div className="mb-4">
+    <label className="block text-sm font-semibold mb-2">
+      Select Enrollment Number for Student {i + 1}:
+    </label>
+    <Select
+      className="text-black"
+      options={enrollmentOptions}
+      value={enrollmentOptions.find(
+        (option) => option.value === selectedEnrollment1
+      )}
+      onChange={handleEnrollmentChange1}
+      isSearchable
+    />
+  </div>
+  
+  {studentDetails1.length > 0 && (
+    <div>
+      <h2 className="text-lg font-bold mb-2">Student {i + 1} Details</h2>
+      <p>Name: {i > studentDetails1.length - 1 ? studentDetails1.nameOfStudent : studentDetails1[i].nameOfStudent}</p>
+      <p>Enrollment Number: {i > studentDetails1.length - 1 ? studentDetails1.enrollmentNumber : studentDetails1[i].enrollmentNumber}</p>
+      <p>Semester: {i > studentDetails1.length - 1 ? studentDetails1.semester : studentDetails1[i].semester}</p>
+      <p>Branch: {i > studentDetails1.length - 1 ? studentDetails1.branch : studentDetails1[i].branch}</p>
+      <p>Year: {i > studentDetails1.length - 1 ? studentDetails1.year : studentDetails1[i].year}</p>
+      <p>Contact: {i > studentDetails1.length - 1 ? studentDetails1.contact : studentDetails1[i].contact}</p>
+      <p>Email: {i > studentDetails1.length - 1 ? studentDetails1.email : studentDetails1[i].email}</p>
+      <Verification studentDetails1={i > studentDetails1.length - 1 ? studentDetails1 : studentDetails1[i]} />
+    </div>
+  )}
+</div>
+
+    </div>);
+  }
 
   return (
     <div className="h-auto min-h-screen flex flex-col md:flex-row items-center justify-center bg-color1 text-black">
       <StudentNav />
-      <div className="w-full max-w-5xl p-6 mt-20 rounded bg-white md:flex md:flex-wrap">
-        <StudentRegistration onNumberOfMemberSelection={handleSelectedMembersChange} onprojectIdGeneration={handleProjectIdeageneartion}/>
-     <div>{rows}</div>
-        
-
-        
+      <div className="w-full max-w-3xl p-6 mt-20 rounded bg-white ">
+        <StudentRegistration onNumberOfMemberSelection={handleSelectedMembersChange} onprojectIdGeneration={handleProjectIdeageneartion} />
+        <div>{rows}</div>
       </div>
     </div>
   );
