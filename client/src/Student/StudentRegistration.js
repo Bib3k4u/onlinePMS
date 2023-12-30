@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import axios from "axios";
+import { useEmailValidateState } from "../StateManagements/EmailValidState";
 const StudentRegistration = ({
   onNumberOfMemberSelection,
   onprojectIdGeneration,
   studentDetails1,
 }) => {
+  const {projectId,setProjectId} = useEmailValidateState();
   const [member, setMember] = useState(0);
   const [generatedProjectID, setGeneratedProjectID] = useState("");
   const [isclicked, setIsClicked] = useState(false);
@@ -38,7 +40,7 @@ const StudentRegistration = ({
     
     try {
       const response = await axios.get(
-        `http://localhost:3001/createProjectIdTable/${generatedProjectID}`
+        `http://localhost:3001/createProjectIdTable/${projectId}`
       );
       console.log(response);
     } catch (error) {
@@ -63,7 +65,7 @@ const StudentRegistration = ({
         selectedYear +
         selectedSemester +
         (parseInt(lastprojectId.substring(4, lastprojectId.length)) + 1);
-      setGeneratedProjectID(code);
+        setProjectId(code);
       onprojectIdGeneration(code);
        
       // console.log(response);
@@ -73,7 +75,7 @@ const StudentRegistration = ({
   }, [lastprojectId, selectedYear, selectedSemester]);
 
   console.log(lastprojectId);
-  console.log(generatedProjectID);
+  console.log(projectId);
   return (
     <div>
       <label className="block text-sm font-semibold mb-2">Select Year:</label>
@@ -133,7 +135,7 @@ const StudentRegistration = ({
           </div>
         </div>
       )}
-      <h2> {generatedProjectID}</h2>
+      <h2> {projectId}</h2>
     </div>
   );
 };

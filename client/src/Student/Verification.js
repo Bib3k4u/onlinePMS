@@ -3,8 +3,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEmailValidateState } from '../StateManagements/EmailValidState';
+import axios from 'axios';
 export const Verification = ({studentDetails1,index,verificationStatus, onVerification }) => {
-    const {emailValidFirst,setEmailValidForStudent1}  = useEmailValidateState();
+  const {projectId,setProjectId} = useEmailValidateState();
+
     const form = useRef();
     const [verificationCode, setVerificationCode] = useState('');
     const [enteredCode, setEnteredCode] = useState('');
@@ -51,9 +53,16 @@ export const Verification = ({studentDetails1,index,verificationStatus, onVerifi
   const verifyCode = async() => {
     if (enteredCode === verificationCode) {
       onVerification(index);
-      setEmailValidForStudent1(true);
+      // setEmailValidForStudent1(true);
       try {
         
+     
+      await axios.post(`http://localhost:3001/addMemberData?enrollment=${studentDetails1}&table=${projectId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
       } catch (error) {
         
       }
@@ -63,7 +72,7 @@ export const Verification = ({studentDetails1,index,verificationStatus, onVerifi
         position: toast.POSITION.TOP_RIGHT,
       });
     } else {
-      setEmailValidForStudent1(false);
+      // setEmailValidForStudent1(false);
       toast.error('Invalid verification code. Please try again.', {
         autoClose: 5000,
         position: toast.POSITION.TOP_RIGHT,
