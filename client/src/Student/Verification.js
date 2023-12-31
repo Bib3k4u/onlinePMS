@@ -3,13 +3,14 @@ import React, { useRef, useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEmailValidateState } from '../StateManagements/EmailValidState';
-export const Verification = ({studentDetails1}) => {
-    const {emailValidFirst,setEmailValidForStudent1}  = useEmailValidateState();
+import axios from 'axios';
+export const Verification = ({studentDetails1,index,verificationStatus, onVerification }) => {
+  const {projectId,setProjectId} = useEmailValidateState();
+
     const form = useRef();
     const [verificationCode, setVerificationCode] = useState('');
     const [enteredCode, setEnteredCode] = useState('');
  
-  
     useEffect(() => {
       generateVerificationCode();
     }, []); // Run once on component mount to generate the initial verification code
@@ -49,22 +50,36 @@ export const Verification = ({studentDetails1}) => {
       });
   };
 
-  const verifyCode = () => {
+  const verifyCode = async() => {
     if (enteredCode === verificationCode) {
-      setEmailValidForStudent1(true);
+      onVerification(index);
+      // setEmailValidForStudent1(true);
+      try {
+        
+     
+      await axios.post(`http://localhost:3001/addMemberData?enrollment=${studentDetails1}&table=${projectId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      } catch (error) {
+        
+      }
+
       toast.success('Verification successful!', {
         autoClose: 5000,
         position: toast.POSITION.TOP_RIGHT,
       });
     } else {
-      setEmailValidForStudent1(false);
+      // setEmailValidForStudent1(false);
       toast.error('Invalid verification code. Please try again.', {
         autoClose: 5000,
         position: toast.POSITION.TOP_RIGHT,
       });
     }
   };
-
+console.log(verificationCode);
   return (
     <div className="max-w-md mx-auto p-4 bg-blue-100 rounded-md my-8">
       <ToastContainer />
@@ -85,9 +100,9 @@ export const Verification = ({studentDetails1}) => {
         </button>
       </form>
 
-      {emailValidFirst ? (
+      {verificationStatus[index] ? (
         <p className="mt-4 text-green-700 font-bold">Verification successful!</p>
-      ) : (
+      )  : (
         <div className="mt-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Enter Verification Code:

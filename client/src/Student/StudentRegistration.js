@@ -31,7 +31,7 @@ const StudentRegistration = ({ onNumberOfMemberSelection, onprojectIdGeneration,
       const response = await axios.get(`http://localhost:3001/projectsData/${"BT" + selectedYear}`);
       setLastProjectID(response.data[0].projectId);
     } catch (error) {
-      console.error('Error fetching project data:', error);
+      console.error("Error fetching project data:", error);
       // Handle error as needed
     }
   };
@@ -77,6 +77,8 @@ const StudentRegistration = ({ onNumberOfMemberSelection, onprojectIdGeneration,
       const code = "BT" + selectedYear + selectedSemester + (parseInt(lastprojectId.substring(4, lastprojectId.length)) + 1);
       setGeneratedProjectID(code);
       onprojectIdGeneration(code);
+       
+      // console.log(response);
     };
 
     generateProjectId();

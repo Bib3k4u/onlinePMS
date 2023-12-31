@@ -9,39 +9,43 @@ const ProjectList = (sequelize) =>{
         },
         tile:{
             type:DataTypes.STRING,
-            allowNull:false,
+            allowNull:true,
         },
         members:{
             type:DataTypes.STRING,
-            allowNull:false,
+            allowNull:true,
         },
         guide:{
             type:DataTypes.STRING,
-            allowNull:false,
+            allowNull:true,
         },
         currentStatus:{
             type:DataTypes.STRING,
-            allowNull:false,
+            allowNull:true,
         },
         researPaper:{
             type:DataTypes.STRING,
-            allowNull:false,
+            allowNull:true,
         },
         patent:{
             type:DataTypes.STRING,
-            allowNull:false,
+            allowNull:true,
         },
         domain:{
             type:DataTypes.STRING,
-            allowNull:false,
+            allowNull:true,
         },
         branch:{
             type:DataTypes.STRING,
-            allowNull:false,
+            allowNull:true,
         },
         year:{
             type:DataTypes.STRING,
-            allowNull:false,
+            allowNull:true,
+        },
+        semester:{
+            type:DataTypes.STRING,
+            allowNull:true
         }
     },{
         tableName:'projects',

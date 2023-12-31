@@ -1,31 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Select from 'react-select';
-import StudentNav from './Components/StudentNav';
-import { Verification } from './Verification';
-import StudentRegistration from './StudentRegistration';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Select from "react-select";
+import StudentNav from "./Components/StudentNav";
+import { Verification } from "./Verification";
+import StudentRegistration from "./StudentRegistration";
 const App = () => {
   const [generatedProjectID, setgeneratedProjectID] = useState("");
 
   const [enrollmentOptions, setEnrollmentOptions] = useState([]);
-  const [selectedEnrollment1, setSelectedEnrollment1] = useState('');
+  const [selectedEnrollment1, setSelectedEnrollment1] = useState("");
   const [studentDetails1, setStudentDetails1] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState(0);
-
-
+  const [memberMap, setMemberMap] = useState(new Map());
+  const [okClicked,setOkClicked] = useState(false);
   const handleSelectedMembersChange = (selectedMembers) => {
     setSelectedMembers(selectedMembers);
   };
   const handleProjectIdeageneartion = (x) => {
     setgeneratedProjectID(x);
-  }
+  };
   useEffect(() => {
     const fetchEnrollmentOptions = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:3001/enrollmentNumbers`);
+        const response = await axios.get(
+          `http://localhost:3001/enrollmentNumbers`
+        );
         const options = response.data.map((enrollment) => ({
           label: enrollment,
           value: enrollment,
@@ -33,14 +35,14 @@ const App = () => {
         setEnrollmentOptions(options);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching enrollment numbers:', error);
+        console.error("Error fetching enrollment numbers:", error);
       }
     };
 
     fetchEnrollmentOptions();
   }, []);
-
-  const handleEnrollmentChange1 = async (selectedOption) => {
+console.log(enrollmentOptions);
+  const handleEnrollmentChange1 = async (selectedOption, index) => {
     try {
       if (selectedOption && !enrollments.includes(selectedOption.value)) {
         setEnrollments([...enrollments, selectedOption.value]);
@@ -53,10 +55,17 @@ const App = () => {
         alert('Please select a different Enrollment number for each Student');
       }
     } catch (error) {
-      console.error('Error fetching student details:', error);
+      console.error("Error fetching student details:", error);
     }
   };
+  const [verificationStatus, setVerificationStatus] = useState(Array(selectedMembers).fill(false));
 
+  const handleOkClick = (index) => {
+    setOkClicked(true); const updatedVerificationStatus = [...verificationStatus];
+    updatedVerificationStatus[index] = true;
+    setVerificationStatus(updatedVerificationStatus);
+  };
+ 
   const rows = [];
   for (let i = 0; i < selectedMembers; i++) {
     // element in this array. see: https://reactjs.org/docs/lists-and-keys.html
@@ -111,6 +120,3 @@ const App = () => {
 };
 
 export default App;
-
-
-

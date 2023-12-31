@@ -7,7 +7,6 @@ const { Sequelize,Op } = require('sequelize');
 
 const StudentList = require('./models/StudentList')(sequelize);
 const ProjectList = require('./models/ProjectList')(sequelize);
-const ProjectIDList = require('./models/ProjectId')(sequelize);
 const multer = require('multer');
 const xlsx = require('xlsx');
 const app = express();
@@ -32,21 +31,24 @@ app.get('/studentsData', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-app.get('/projectsData/:year', async (req, res) => {
+app.get('/projectsData', async (req, res) => {
   try {
     // Assuming 'columnName' is the name of the column you want to check the third character for
     const columnName = 'projectId';
-    const value = req.params.year;
-    console.log(value);
-    const projects = await ProjectList.findAll({
-      attributes:[columnName],
-      where: {
-         [columnName] :{
+    const year = req.query.year;
+    const semester = req.query.semester;
 
-         [Op.startsWith]:value}
+    const projects = await ProjectList.findAll({
+      attributes: [columnName],
+      where: {
+        [Op.and]: [
+          { [columnName]: { [Op.startsWith]: `BT${year}` } },
+          { year: year },
+          { semester: semester },
+        ],
       },
       order: [['projectId', 'DESC']],
-      limit: 1
+      limit: 1,
     });
 
     res.json(projects);
@@ -55,6 +57,7 @@ app.get('/projectsData/:year', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 // Add a new student
 app.post('/sdUpload', upload.single('file'), async (req, res) => {
@@ -155,6 +158,107 @@ app.get('/studentDetails/:enrollmentNumber', async (req, res) => {
 });
 
 
+app.get('/createProjectIdTable/:projectId', async (req, res) => {
+  const tableName = req.params.projectId;
+  try {
+    // Check if the table already exists
+    const tableExists = await sequelize.queryInterface.showAllTables()
+      .then((tableNames) => tableNames.includes(tableName));
+
+    if (!tableExists) {
+      // Dynamically create the table
+      await sequelize.queryInterface.createTable(tableName, {
+        enrollmentNumber:{
+            type:Sequelize.STRING,
+            primaryKey:true,
+            allowNull:false,
+        },
+        verfication:{
+            type:Sequelize.STRING,
+            allowNull:false,
+        },
+        status:{
+            type:Sequelize.STRING,
+            allowNull:false,
+        },
+        currentStatus:{
+            type:Sequelize.STRING,
+            allowNull:false,
+        },
+        marks:{
+            type:Sequelize.STRING,
+            allowNull:false,
+        }
+        // ... other columns
+      });
+
+      res.json({ message: `Table '${tableName}' created successfully` });
+    } else {
+      res.json({ message: `Table '${tableName}' already exists.` });
+    }
+  } catch (error) {
+    console.error('Error creating table:', error);
+    res.status(500).json({ error: 'Internal server Error' });
+  }
+});
+
+
+app.post('/addMemberData/:projectId', async (req, res) => {
+  try {
+    const tableName = req.params.projectId;
+
+    // Access the enrollment numbers from the request body
+    const enrollmentNumbers = req.query.enrollment;
+    console.log('Enrollment numbers:', enrollmentNumbers);
+
+    // Check if the table exists
+    const tableExists = await sequelize.queryInterface.showAllTables()
+      .then((tableNames) => tableNames.includes(tableName));
+
+    if (tableExists) {
+      // Use Sequelize model for the dynamically created table
+      const ProjectTable = sequelize.define(tableName, {
+        enrollmentNumber: {
+          type: Sequelize.STRING,
+          primaryKey: true,
+          allowNull: false,
+        },
+        verification: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        status: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        currentStatus: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        marks: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+      });
+
+      // Add enrollment numbers to the table
+      await ProjectTable.bulkCreate(enrollmentNumbers.map(enrollmentNumber => ({
+        enrollmentNumber,
+        verification: 'default_verification_value',
+        status: 'default_status_value',
+        currentStatus: 'default_current_status_value',
+        marks: 'default_marks_value',
+      })));
+
+      res.status(200).json({ message: 'Enrollment numbers added successfully' });
+    } else {
+      res.status(404).json({ error: `Table '${tableName}' does not exist.` });
+    }
+  } catch (error) {
+    console.error('Error handling enrollment numbers:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 // Sync the model with the database and start the server
 sequelize.sync().then(() => {
