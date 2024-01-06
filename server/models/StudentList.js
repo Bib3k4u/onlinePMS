@@ -1,48 +1,60 @@
+// student-model.js
 const { DataTypes } = require('sequelize');
 
-const StudentList = (sequelize) => {
-  return sequelize.define('studentList', {
-    enrollmentNumber: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-      allowNull: false,
-    },
-    admissionNumber: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false,
-    },
-    nameOfStudent: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    branch: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    year: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    semester: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    contact: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email:{
-      type:DataTypes.STRING,
-      allowNull:false,
-    },
-    projectID: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-  }, {
-    tableName: 'studentList', // Explicitly specify the table name
-  });
+
+const Student = (sequelize)=>{
+return sequelize.define('Student', {
+  StudentID: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  Name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  AdmissionNumber: {
+    type: DataTypes.STRING,
+    primaryKey: true,
+    allowNull: false,
+  },
+  Email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+
+  },
+  Phone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  EnrollmentNumber: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  Year:{
+    type:DataTypes.STRING,
+    allowNull:false,
+  },
+  Semester:{
+    type:DataTypes.STRING,
+    allowNull:false,
+  },
+  Course:{
+   type:DataTypes.STRING,
+   allowNull:false,  
+  },
+  Branch:{
+    type:DataTypes.STRING,
+    allowNull:false,
+  },
+  Session:{
+  type:DataTypes.STRING,
+  allowNull:false,
+  }
+
+}, {
+  // Disable timestamps
+  timestamps: false,
+});
 };
 
-module.exports = StudentList;
+module.exports = Student;

@@ -1,55 +1,60 @@
-const {DataTypes} = require('sequelize');
+// project-model.js
+const { DataTypes } = require("sequelize");
 
-const ProjectList = (sequelize) =>{
-    return sequelize.define('projectList',{
-        projectId:{
-            type:DataTypes.STRING,
-            primaryKey:true,
-            allowNull:false,
+const Project = (sequelize) => {
+  return sequelize.define(
+    "Project",
+    {
+      ProjectID: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+        allowNull: false,
+      },
+      ProjectNumber: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      GuideID: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        references: {
+          model: "Teachers",
+          key: "TeacherID",
         },
-        tile:{
-            type:DataTypes.STRING,
-            allowNull:true,
+      },
+      ReviewerID: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        references: {
+          model: "Teachers",
+          key: "TeacherID",
         },
-        members:{
-            type:DataTypes.STRING,
-            allowNull:true,
+      },
+      CurrentStatus: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      Year:{
+        type:DataTypes.STRING,
+        allowNull:false,
+      },
+      Semester:{
+        type:DataTypes.STRING,
+        allowNull:false,
+      }
+
+    },
+    {
+      // Disable timestamps
+      timestamps: false,
+      hooks: {
+        // Hook to automatically generate ProjectID by combining a prefix and ProjectNumber
+        beforeValidate: (project) => {
+          project.ProjectID = `BT-${project.ProjectNumber}`;
         },
-        guide:{
-            type:DataTypes.STRING,
-            allowNull:true,
-        },
-        currentStatus:{
-            type:DataTypes.STRING,
-            allowNull:true,
-        },
-        researPaper:{
-            type:DataTypes.STRING,
-            allowNull:true,
-        },
-        patent:{
-            type:DataTypes.STRING,
-            allowNull:true,
-        },
-        domain:{
-            type:DataTypes.STRING,
-            allowNull:true,
-        },
-        branch:{
-            type:DataTypes.STRING,
-            allowNull:true,
-        },
-        year:{
-            type:DataTypes.STRING,
-            allowNull:true,
-        },
-        semester:{
-            type:DataTypes.STRING,
-            allowNull:true
-        }
-    },{
-        tableName:'projects',
-    
-    });
-}
-module.exports = ProjectList;
+      },
+    }
+  );
+};
+
+module.exports = Project;
