@@ -80,7 +80,7 @@ router.put("/updateTeacherData/:teacherId", async (req, res) => {
       where: { TeacherID: teacherID },
     });
 
-    res.status(200).json({ message: "Student data updated" });
+    res.status(200).json({ message: "Teacher data updated" });
   } catch (error) {
     console.log(error);
     res.json({ error: error });

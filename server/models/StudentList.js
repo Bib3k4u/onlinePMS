@@ -1,5 +1,5 @@
 // student-model.js
-const { DataTypes } = require('sequelize');
+const { DataTypes, STRING } = require('sequelize');
 
 
 const Student = (sequelize)=>{
@@ -49,6 +49,11 @@ return sequelize.define('Student', {
   Session:{
   type:DataTypes.STRING,
   allowNull:false,
+  },
+  Password:{
+    type:STRING,
+    allowNull:false,
+    defaultValue:'Gu@12345'
   }
 
 }, {

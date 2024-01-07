@@ -19,7 +19,19 @@ router.get("/allStudents", async (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
     }
   });
-  
+  router.get('/student/:admissionNumber',async (req,res)=>{
+    const admissionNumber = req.params.admissionNumber;
+    try{
+      const stData = await Student.findAll({
+        where:{AdmissionNumber:admissionNumber}
+      })
+      res.status(200).json({studentData:stData});
+    }catch(error)
+    {
+
+      res.status(400).json({error:"error encountered while fetching"})
+    }
+  })
   // Add a new student
   router.post("/studentDataUpload", upload.single("file"), async (req, res) => {
     try {
@@ -44,6 +56,7 @@ router.get("/allStudents", async (req, res) => {
       await Promise.all(
         data.map(async (row) => {
           try {
+            const maxStudentID = await Student.max('StudentID');
             const [student, created] = await Student.findOrCreate({
               where: { AdmissionNumber: row.AdmissionNumber },
               defaults: {
@@ -56,9 +69,15 @@ router.get("/allStudents", async (req, res) => {
                 Email: row.Email,
                 Course: row.Course,
                 Session: row.Session,
-                StudentID: row.StudentID,
+                StudentID: maxStudentID?maxStudentID+1:1,
+              
               },
             });
+            // console.log(student);
+            if(!student)
+            {
+              return res.status(400).json({message:'something went wrong'});
+            }
   
             // if (!created) {
             //   console.log(`Entry with enrollment number ${row.enrollmentNumber} already exists. Skipping.`);
@@ -67,7 +86,7 @@ router.get("/allStudents", async (req, res) => {
             console.error("Error adding student:", error);
           }
         })
-      );
+      )
   
       res.json({ message: "Data uploaded successfully" });
     } catch (error) {

@@ -34,15 +34,24 @@ const Project = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      Year:{
-        type:DataTypes.STRING,
-        allowNull:false,
+      Year: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
-      Semester:{
-        type:DataTypes.STRING,
-        allowNull:false,
-      }
-
+      Semester: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      ProjectTitle: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "#######",
+      },
+      ProjectAbstract: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        defaultValue: "######",
+      },
     },
     {
       // Disable timestamps

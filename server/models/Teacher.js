@@ -25,6 +25,11 @@ return sequelize.define('Teacher', {
     allowNull:false,
     defaultValue:'C-515'
   },
+  Password:{
+    type:DataTypes.STRING,
+    allowNull:false,
+    defaultValue:'Gu@12345'
+  }
   
 }, {
   // Disable timestamps
