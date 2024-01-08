@@ -5,6 +5,8 @@ import Login from './Pages/Login';
 import { useLoginManager } from './StateManagement/UserManagement';
 import Forbidden from './Pages/Forbidden';
 import AddStudent from './Pages/Admin/AddStudent';
+import AddTeacher from './Pages/Admin/AddTeacher';
+import CreateProject from './Pages/Student/CreateProject';
 const isAuthenticated = () => {
   // Check if userId is present in the session
   const loginStaus = localStorage.getItem('isLogedIn');
@@ -58,6 +60,12 @@ const App = () => {
           path="/a/addStudent"
           element={<AdminAccesedRoute element={<AddStudent />} />}
         />
+         <Route
+          path="/a/addTeacher"
+          element={<AdminAccesedRoute element={<AddTeacher />} />}
+        />
+        <Route path="project/createProject"
+        element={<CreateProject /> }/>
       </Routes>
     </Router>
   );

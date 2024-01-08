@@ -88,7 +88,7 @@ router.get("/allProjects", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   try {
-    const { year, semester, admissionNumber } = req.body;
+    const { year, semester, admissionNumber,members } = req.body;
     const{userId} = req.user;
     // console.log(user);
     console.log(userId);
@@ -101,7 +101,7 @@ router.post("/create", async (req, res) => {
     const tempValue = await getLastProjectId(year, semester);
     const project = await Project.create({
       ProjectID: tempValue,
-      ProjectNumber: tempValue.substring(4, tempValue.length),
+      ProjectNumber:members ,
       GuideID: "GUSCSE1010339",
       ReviewerID: "GUSCSE1010339",
       CurrentStatus: "Pending",

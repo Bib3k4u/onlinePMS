@@ -5,9 +5,9 @@ import project from './../assests/images/Icons/solution.png';
 const homeData = [
     {src: student, title: 'Add Student', toRoute: '/a/addStudent' ,category:['admin'],relatedTo:'student'},
     {src: student, title: 'Update Student Data', toRoute: '/s/addStudeent',category:['admin'],relatedTo:'student'},
-    {src: teacher, title: 'Add teacher', toRoute: '/s/addStudeent',category:['admin'],relatedTo:'teacher'},
+    {src: teacher, title: 'Add teacher', toRoute: '/a/addTeacher',category:['admin'],relatedTo:'teacher'},
     {src: teacher2, title: 'Update Teacher Data', toRoute: '/s/addStudeent',category:['admin'],relatedTo:'teacher'},
-    {src: project, title: 'Create Project Group', toRoute: '/s/addStudeent',category:['admin','student','guide'],relatedTo:'projects'},
+    {src: project, title: 'Create Project Group', toRoute: '/project/createProject',category:['admin','student','guide'],relatedTo:'projects'},
     {src: student, title: 'Projects Groups', toRoute: '/s/addStudeent',category:['admin'],relatedTo:'projects'},
     {src: student, title: 'Research papers', toRoute: '/s/addStudeent',category:['admin'],relatedTo:'projects'},
     {src: teacher2, title: 'Allocate Guide', toRoute: '/s/addStudeent',category:['admin'],relatedTo:'projects'},

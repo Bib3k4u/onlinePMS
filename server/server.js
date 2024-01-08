@@ -40,10 +40,13 @@ app.use(
       secure: false, // Set to true if using HTTPS
       maxAge: 3600000, // Session expiration time in milliseconds (1 hour in this example)
     },
-  })
+  },
+ )
 );
 
-app.use(authenticateUser);
+// app.use(authenticateUser);
+
+
 
 app.get('/user', async (req, res) => {
   const { userId, role } = req.query; // Assuming you're sending these parameters as query parameters
@@ -124,7 +127,8 @@ app.post('/login', async (req, res) => {
 
     if (userData.Password === password) {
       // Store user information in the session
-      req.session.user = { userId, role };
+      // sessionStorage.setItem('role',role);
+      // req.session.user = { userId, role };
       console.log(req.session);
       res.status(200).json({ message: 'Login Successful', userData: userData, role: role });
     } else {
@@ -135,10 +139,10 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.use('/s', authenticateUser,studentRoute);
+app.use('/s',studentRoute);
 
 // Use authorizeTeacher middleware only for '/t' route
-app.use('/t', authorizeTeacher, TeacherRoute,);
+app.use('/t', TeacherRoute,);
 
 app.use('/projects', ProjectRoute,);
 

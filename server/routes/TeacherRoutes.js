@@ -46,7 +46,7 @@ router.post("/teacherDataUpload", upload.single("file"), async (req, res) => {
       data.map(async (row) => {
         try {
           const [teacher, created] = await Teacher.findOrCreate({
-            where: { TeacherID: row.TeacherID },
+            where: { TeacherID: (row.AdmissionNumber?row.AdmissionNumber:row.TeacherID)},
             defaults: {
               Name: row.Name,
               Phone: row.Phone,

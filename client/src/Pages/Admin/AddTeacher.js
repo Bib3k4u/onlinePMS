@@ -6,7 +6,7 @@ import FetchedStudentData from './Component/FetchedStudent';
 import AddingStudentManually from './Component/AddingStudentManually';
 import Layouts from '../../Layouts/Layouts';
 
-const AddStudent = () => {
+const AddTeacher = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -34,7 +34,7 @@ const AddStudent = () => {
       const formData = new FormData();
       formData.append('file', file);
   
-      await axios.post('http://localhost:3001/s/studentDataUpload', formData, {
+      await axios.post('http://localhost:3001/t/teacherDataUpload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -101,7 +101,7 @@ const AddStudent = () => {
       <ToastContainer />
 
       <div className="max-w-md mx-auto mt-20 p-6 bg-textColor1 cardShadow rounded-md shadow-md upCard border">
-        <h2 className="text-2xl bg-color1 text-black font-semibold mb-4">Upload Student List</h2>
+        <h2 className="text-2xl bg-color1 text-black font-semibold mb-4">Upload Teacher List</h2>
 
         {/* File Input */}
         <div className="mb-4">
@@ -147,13 +147,13 @@ const AddStudent = () => {
 
 
 
-      <AddingStudentManually onStudentAdded={handleStudentAdded} role='Student' />
+      <AddingStudentManually onStudentAdded={handleStudentAdded} role='Teacher' />
 
       {/* Rest of your component */}
-      <FetchedStudentData role='Student' />
+      <FetchedStudentData role='Teacher' />
       </div>
     </Layouts>
   );
 };
 
-export default AddStudent;
+export default AddTeacher;

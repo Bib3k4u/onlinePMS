@@ -4,7 +4,9 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Select from 'react-select';
 
-function AddingStudentManually() {
+function AddingStudentManually(props) {
+  const role = props.role;
+  
   const [studentData, setStudentData] = useState({
     EnrollmentNumber: '',
     AdmissionNumber: '',
@@ -16,6 +18,7 @@ function AddingStudentManually() {
     Email: '',
     Session:'',
     Course:'',
+    Cabin:'',
     isYearSelected: false,
     visibleSemesters: [],
   });
@@ -66,10 +69,10 @@ function AddingStudentManually() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const roleroute  = (role==='Student'?'s/studentDataUpload':'t/teacherDataUpload');
     try {
       // Make an API request to save the student data
-      await axios.post('http://localhost:3001/s/studentDataUpload', studentData);
+      await axios.post(`http://localhost:3001/${roleroute}`, studentData);
       toast.success('Student added successfully!');
       setStudentData({
         EnrollmentNumber: '',
@@ -82,6 +85,7 @@ function AddingStudentManually() {
         Email: '',
         Session:'',
         Course:'',
+        Cabin:'',
         isYearSelected: false,
         visibleSemesters: [],
       });
@@ -116,10 +120,10 @@ function AddingStudentManually() {
         draggable
         pauseOnHover
       />
-      <h2 className="text-2xl font-bold pt-2 mb-4 flex justify-center">Add Student Manually</h2>
+      <h2 className="text-2xl font-bold pt-2 mb-4 flex justify-center">Add Data Manually</h2>
       <form onSubmit={handleSubmit} className="w-full mx-auto">
-        <div className='flex flex-col md:flex-row lg:flex-row xl:flex-row justify-around'>
-          <label className="block mb-4">
+        <div className='flex flex-wrap flex-col md:flex-row lg:flex-row xl:flex-row justify-around'>
+         {role==='Student' && <label className="block mb-4">
             <span className="text-gray-700">Enrollment Number:</span>
             <input
               type="text"
@@ -130,15 +134,15 @@ function AddingStudentManually() {
               onChange={(e) => handleChange(e.target.value, 'EnrollmentNumber')}
               className="form-input mt-1 p-2 border rounded-md border-gray-300 block w-full"
             />
-          </label>
+          </label>}
 
           <label className="block mb-4">
-            <span className="text-gray-700">Admission Number:</span>
+            <span className="text-gray-700">{role==='Student'?"Admission Number":"Teacher ID"}:</span>
             <input
               type="text"
-              placeholder='Admission Number'
+              placeholder={role==='Student'?"Admission Number":"Teacher ID"}
               required
-              name="AdmissionNumber"
+              name={studentData.AdmissionNumber}
               value={studentData.AdmissionNumber}
               onChange={(e) => handleChange(e.target.value, 'AdmissionNumber')}
               className="form-input mt-1 p-2 border rounded-md border-gray-300 block w-full"
@@ -158,7 +162,7 @@ function AddingStudentManually() {
             />
           </label>
 
-          <label className="block mb-4 ">
+          {role==='Student' &&<label className="block mb-4 ">
             <span className="text-gray-700">Year:</span>
             <Select
               required
@@ -177,9 +181,9 @@ function AddingStudentManually() {
                 }),
               }}
             />
-          </label>
+          </label>}
 
-          <label className="block mb-4">
+          {role==='Student'&&<label className="block mb-4">
             <span className="text-gray-700">Semester:</span>
             <Select
               required
@@ -198,11 +202,10 @@ function AddingStudentManually() {
                 }),
               }}
             />
-          </label>
-        </div>
+          </label>}
+      
        
-        <div className='flex flex-col md:flex-row lg:flex-row xl:flex-row justify-around'>
-        <label className="block mb-4 w-60">
+        {role==='Student'&&<><label className="block mb-4 w-60">
             <span className="text-gray-700">Course:</span>
             <Select
               required
@@ -242,7 +245,7 @@ function AddingStudentManually() {
                 }),
               }}
             />
-          </label>
+          </label></>}
        
 
           <label className="block mb-4">
@@ -270,7 +273,19 @@ function AddingStudentManually() {
               className="form-input mt-1 p-2 border rounded-md border-gray-300 block w-full"
             />
           </label>
-          <label className="block mb-4">
+          {role==='Teacher'&&<label className="block mb-4">
+            <span className="text-gray-700">Cabin:</span>
+            <input
+              required
+              placeholder='C-125'
+              type="text"
+              name="Cabin"
+              value={studentData.Cabin}
+              onChange={(e) => handleChange(e.target.value, 'Cabin')}
+              className="form-input mt-1 p-2 border rounded-md border-gray-300 block w-full"
+            />
+          </label>}
+          {role==='Student'&&<label className="block mb-4">
             <span className="text-gray-700">Session:</span>
             <input
               placeholder='2020-2024'
@@ -281,7 +296,7 @@ function AddingStudentManually() {
               onChange={(e) => handleChange(e.target.value, 'Session')}
               className="form-input mt-1 p-2 border rounded-md border-gray-300 block w-full"
             />
-          </label>
+          </label>}
           
 
           <label className="flex justify-center items-center">
@@ -290,7 +305,7 @@ function AddingStudentManually() {
               type="submit"
               className="bg-bgBlueDark mb-4 text-textColor1  buttonShadow hover:bg-hoverButton font-semibold tracking-wider mt-1 w-60 h-12 rounded-md"
             >
-              Add Student
+              Add {role}
             </button>
           </label>
         </div>

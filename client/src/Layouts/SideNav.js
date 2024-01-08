@@ -18,6 +18,21 @@ function SideNav({ sendDataToLayout }) {
   return (
     <div className={`sidebar relative sidebar bg-bgBlue h-screen  p-5  flex flex-col  gap-10 text-textColor1 text-lg ${crossClicked?'w-fit':'w-full'}`} >
          <div className="justify-self-end self-end lg:block hover:cursor-pointer" onClick={handleCorssClicked}>{crossClicked?<AlignJustify/>:<X color='white' />}</div>
+      
+         <div>
+       
+        <Link
+          to="/Home"
+          className="flex flex-row gap-2  text-black items-center rounded-3xl"
+        >
+          <div className="bg-white p-2 rounded-full ">
+            <img src={student} width={30} className="rounded-full" />
+          </div>{" "}
+          <div className={` bg-white w-full p-2 text-center rounded-3xl ${crossClicked?'hidden':''}  `}>
+            Admin
+          </div>
+        </Link>
+      </div>
       <div>
        
         <Link
