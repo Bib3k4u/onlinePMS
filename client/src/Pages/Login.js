@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useLoginManager } from "../StateManagement/UserManagement";
 
 function Login() {
+  const role = sessionStorage.getItem('role');
   const {setUserRole} = useLoginManager();
   const navigate = useNavigate();
   const loginForm = useRef();
@@ -58,7 +59,8 @@ function Login() {
         sessionStorage.setItem('sessionData',JSON.stringify(value));
         sessionStorage.setItem('role',user.role);
         setUserRole(user.role)
-        navigate("/Home",{ replace: true });
+        
+        navigate("/s/Home");
       } else {
         localStorage.setItem("isLogedIn", false);
         setUser({

@@ -41,10 +41,16 @@ return sequelize.define('ProjectMember', {
     allowNull: true,
     defaultValue: 'Not accepted', // Corrected the defaultValue syntax
   },
+  Addby:{
+    type:DataTypes.STRING,
+    allowNull:false,
+    defaultValue:'###',
+  }
 }, {
   // Disable timestamps
   timestamps: false,
 });
 };
+
 
 module.exports = ProjectMember;

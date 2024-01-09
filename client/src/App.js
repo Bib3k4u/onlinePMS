@@ -1,73 +1,56 @@
-import React,{useEffect} from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, useNavigation } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
-import { useLoginManager } from './StateManagement/UserManagement';
 import Forbidden from './Pages/Forbidden';
 import AddStudent from './Pages/Admin/AddStudent';
 import AddTeacher from './Pages/Admin/AddTeacher';
 import CreateProject from './Pages/Student/CreateProject';
+import MyProject from './Pages/Student/MyProject';
+
 const isAuthenticated = () => {
-  // Check if userId is present in the session
-  const loginStaus = localStorage.getItem('isLogedIn');
-  console.log(loginStaus);
-  return loginStaus==='true';
+  const loginStatus = localStorage.getItem('isLogedIn');
+  return loginStatus === 'true';
 };
 
+const hasRole = (requiredRoles) => {
+  const userRole = sessionStorage.getItem('role');
+  return requiredRoles.includes(userRole);
+};
 
-const PrivateRoute = ({ element, ...rest}) => {
-  return isAuthenticated() ? (
-    element
-  ) : (
-    <Navigate to="/" replace /> // Redirect to login page if not authenticated
-  );
+const PrivateRoute = ({ element, requiredRoles, ...rest }) => {
+  const authenticated = isAuthenticated();
+  const userHasRequiredRole = hasRole(requiredRoles);
+
+  if (authenticated && userHasRequiredRole) {
+    return element;
+  } else if (!authenticated) {
+    // Redirect to login page if not authenticated
+    return <Navigate to="/" replace />;
+  } else {
+    // Redirect to forbidden page if authenticated but doesn't have the required role
+    return <Navigate to="/forbidden" replace />;
+  }
 };
 
 const App = () => {
-  const isPermissiedAsAdmin = ()=>{
-     const userRole = sessionStorage.getItem('role');
-     return userRole==='Admin'
-  }
-  const AdminAccesedRoute =({element,...rest})=>{
-    return isPermissiedAsAdmin()?(element):(<Navigate to="/forbidden" replace />);
-  }
   return (
-    <Router>
+  
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route
-          path="/Home"
-          element={<PrivateRoute element={<Home />} />}
-        />
-        <Route path='/forbidden' element={<Forbidden />} />
-        <Route
-          path="/s/Home"
-          element={<PrivateRoute element={<Home />} />}
-        />
-         <Route
-          path="/g/Home"
-          element={<PrivateRoute element={<Home />} />}
-        />
-         <Route
-          path="/r/Home"
-          element={<PrivateRoute element={<Home />} />}
-        />
-         <Route
-          path="/p/Home"
-          element={<PrivateRoute element={<Home />} />}
-        />
-         <Route
-          path="/a/addStudent"
-          element={<AdminAccesedRoute element={<AddStudent />} />}
-        />
-         <Route
-          path="/a/addTeacher"
-          element={<AdminAccesedRoute element={<AddTeacher />} />}
-        />
-        <Route path="project/createProject"
-        element={<CreateProject /> }/>
+        <Route path="/Home" element={<PrivateRoute element={<Home />} requiredRoles={['Admin']} />} />
+        <Route path="/s/Home" element={<PrivateRoute element={<Home />} requiredRoles={['Student']} />} />
+        <Route path="/t/Home" element={<PrivateRoute element={<Home />} requiredRoles={['Teacher']} />} />
+        <Route path="/t/Home" element={<PrivateRoute element={<Home />} requiredRoles={['Teacher']} />} />
+        <Route path="/p/Home" element={<PrivateRoute element={<Home />} requiredRoles={['Admin']} />} />
+        <Route path="/a/addStudent" element={<PrivateRoute element={<AddStudent />} requiredRoles={['Admin']} />} />
+        <Route path="/a/addTeacher" element={<PrivateRoute element={<AddTeacher />} requiredRoles={['Admin']} />} />
+        <Route path="/project/createProject" element={<PrivateRoute element={<CreateProject />} requiredRoles={['Student', 'Admin', 'Guide']} />} />
+        <Route path="/projects/myProject" element={<PrivateRoute element={<MyProject />} requiredRoles={['Student', 'Admin', 'Guide']} />} />
+
+        <Route path="/forbidden" element={<Forbidden />} />
       </Routes>
-    </Router>
+    
   );
 };
 

@@ -146,6 +146,9 @@ app.use('/t', TeacherRoute,);
 
 app.use('/projects', ProjectRoute,);
 
+
+
+
 // Sync the model with the database and start the server
 sequelize
   .sync()

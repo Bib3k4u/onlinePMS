@@ -88,10 +88,10 @@ router.get("/allProjects", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   try {
-    const { year, semester, admissionNumber,members } = req.body;
-    const{userId} = req.user;
+    const { year, semester, admissionNumber,members,user } = req.body;
+    
     // console.log(user);
-    console.log(userId);
+    // console.log(userId);
     const data = await isAbleToCreateProject(admissionNumber);
     if(data.length>0)
     {
@@ -115,21 +115,14 @@ router.post("/create", async (req, res) => {
       Review1Marks: "0",
       Review2Makrs: "0",
       CurrentStatus: "registered by self",
-      Addby:userId===admissionNumber?'Self':temp=async()=>{
-        const d = await Student.findAll({
-          attributes:["Name"],
-          where:{
-            AdmissionNumber:admissionNumber
-          }
-        }).then((d)=>{
-          return d;
-        })
+      Addby:user
         
-      }
+      
       // Add other group details as needed
     });
-
-    res.json({ message: "Project and group created successfully", tempValue });
+   console.log(project);
+   console.log(group);
+    res.status(200).json({ message: "Project and group created successfully", tempValue });
   } catch (error) {
     console.error("Error creating project and group:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -137,7 +130,13 @@ router.post("/create", async (req, res) => {
 });
 router.post("/addStudnets/:projectID", async (req, res) => {
   const projectID = req.params.projectID;
-  const { admissionNumber } = req.body;
+  const { admissionNumber,user } = req.body;
+  const data = await isAbleToCreateProject(admissionNumber);
+  if(data.length>0)
+  {
+    return res.status(501).json({message:'You are already registered with group id',projectId:data})
+  }
+  console.log(user);
   try {
     const member = await ProjectMember.create({
       ProjectID: projectID,
@@ -145,6 +144,7 @@ router.post("/addStudnets/:projectID", async (req, res) => {
       Review1Marks: "0",
       Review2Makrs: "0",
       CurrentStatus: "registered by self",
+      Addby:user
     }).then((member) => {
       res.status(200).json({ message: "Student add successfully" });
     });
@@ -153,6 +153,7 @@ router.post("/addStudnets/:projectID", async (req, res) => {
     res.status(404).json({ error: error });
   }
 });
+
 router.post("/addprojectTitle/:projectID", async (req, res) => {
   const projectId = req.params.projectID;
   const { title, abstract } = req.body;
@@ -179,6 +180,36 @@ router.post("/addprojectTitle/:projectID", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.get("/pdSpecific/:admissionNumber",async(req,res)=>{
+  const admissionNumber = req.params.admissionNumber;
+
+  try {
+    const projectId = await ProjectMember.findAll({
+      attributes:['ProjectID'],
+      where:{
+        StudentID:admissionNumber,
+      }
+    })
+    const value = projectId[0].ProjectID;
+    const data = await sequelize.query(
+      'SELECT * FROM Projects AS p ' +
+      'JOIN ProjectMembers AS pm ON p.ProjectID = pm.ProjectID ' +
+      'JOIN Students AS s ON pm.StudentId=s.AdmissionNumber ' +
+      'WHERE pm.ProjectID = :ProjectID',
+      {
+        replacements: {ProjectID:value},
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    res.json({ message: "Successfully fetched the data", data });
+  } catch (error) {
+    console.error("Error while fetching the data:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+})
+
 
 
 module.exports = router;

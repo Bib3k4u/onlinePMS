@@ -129,7 +129,24 @@ router.get("/allStudents", async (req, res) => {
     }
   });
   
+router.get('/studentNotRegistered',async(req,res)=>{
+  try{
+    const data = await sequelize.query(
+      'SELECT AdmissionNumber, Name FROM Students AS s ' +
+      'WHERE NOT EXISTS ( '+
+        'SELECT 1 FROM ProjectMembers '+
+        'WHERE s.AdmissionNumber = ProjectMembers.StudentID '+ 
+      ');',
+      {
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
 
+    res.json({ message: "Successfully fetched the data", data });
+  }catch(error){
+    res.status(500).json({message:'unable to find'})
+  }
+})
 
 
 module.exports = router;

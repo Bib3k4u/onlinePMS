@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import Layouts from '../../Layouts/Layouts';
+import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate} from 'react-router-dom';
 // { onNumberOfMemberSelection, onprojectIdGeneration, studentDetails1 }
 const CreateProject = () => {
+  const navigate = useNavigate();
   const [member, setMember] = useState(0);
-  const [generatedProjectID, setGeneratedProjectID] = useState("");
   const [admissionNumber, setAdmissionNumber] = useState("");
   const [selectedYear, setSelectedYear] = useState(0);
-  const [lastprojectId, setLastProjectID] = useState("");
   const [selectedSemester, setSelectedSemester] = useState(0);
   const [optionsSemester, setOptionsSemester] = useState([]);
   const [isCreateGroupDisabled, setIsCreateGroupDisabled] = useState(true);
@@ -22,7 +23,7 @@ const CreateProject = () => {
 
   const handleButtonClick = (numberOfMembers) => {
     setMember(numberOfMembers);
-    setClass('bg-gray-500')
+    setClass(numberOfMembers);
     // onNumberOfMemberSelection(numberOfMembers);
   };
 
@@ -30,9 +31,31 @@ const CreateProject = () => {
     // setIsClicked(true);
 
     try {
-      const response = await axios.get(`http://localhost:3001/projectsData/${"BT" + selectedYear}`);
-      setLastProjectID(response.data[0].projectId);
+     const response=await axios.post('http://localhost:3001/projects/create',{
+            admissionNumber:admissionNumber,
+            year:selectedYear,
+            semester:selectedSemester,
+            members:member,
+            user:JSON.parse(sessionStorage.getItem('sessionData')).data[0].Name,
+        }, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+      if(response.status===200)
+      {
+        toast.success('Group created Successfully!');   
+        navigate('/projects/myProject',{replace:true});
+    }
     } catch (error) {
+      if(error.response.status===501)
+      {
+        setAdmissionNumber('');
+        setMember('');
+        setSelectedSemester('');
+        setSelectedYear('');
+        toast.error('Already registered to some other project');
+      }
       console.error("Error fetching project data:", error);
       // Handle error as needed
     }
@@ -76,6 +99,7 @@ const CreateProject = () => {
 
   return (
     <Layouts >
+        <ToastContainer />
         <div className='w-full h-screen flex justify-center items-center'>
     <div className="w-5/6 min-w-xl mx-auto p-6 bg-white border-4 border-gray-200 upDown shadow-md rounded-md">
       <label className="block text-sm font-semibold mb-2">Select Year:</label>
@@ -104,12 +128,16 @@ const CreateProject = () => {
           <div className="gap-5 flex justify-center">
             {[1, 2, 3, 4, 5].map((number) => (
               <button
-                key={number}
-                onClick={() => handleButtonClick(number)}
-                className={`${addclass} rounded-full w-12  bg-bgBlueDark hover:scale-110 text-textColor p-3 hover:bg-hoverButton transition duration-300`}
-              >
-                {number}
-              </button>
+              key={number}
+              onClick={() => handleButtonClick(number)}
+              className={`${
+                addclass === number
+                  ? 'bg-gray-500'
+                  : 'bg-bgBlueDark'
+              } rounded-full w-12 text-textColor p-3 hover:scale-110 hover:bg-hoverButton transition duration-300`}
+            >
+              {number}
+            </button>
             ))}
           </div>
         </div>
