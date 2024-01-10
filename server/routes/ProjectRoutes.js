@@ -104,7 +104,7 @@ router.post("/create", async (req, res) => {
       ProjectNumber:members ,
       GuideID: "GUSCSE1010339",
       ReviewerID: "GUSCSE1010339",
-      CurrentStatus: "Pending",
+      Status: "Pending",
       Year: year,
       Semester: semester,
     });
@@ -169,7 +169,7 @@ router.post("/addprojectTitle/:projectID", async (req, res) => {
       }
     );
 
-    console.log(updatedRows);
+    
 
     if (updatedRows > 0) {
       res.status(200).json({ message: "Data added successfully",title,abstract });
@@ -181,24 +181,37 @@ router.post("/addprojectTitle/:projectID", async (req, res) => {
   }
 });
 
-router.get("/pdSpecific/:admissionNumber",async(req,res)=>{
-  const admissionNumber = req.params.admissionNumber;
+router.get("/pdSpecific", async (req, res) => {
+  const userID = req.query.userID;
+  const role = req.query.role;
 
   try {
-    const projectId = await ProjectMember.findAll({
-      attributes:['ProjectID'],
-      where:{
-        StudentID:admissionNumber,
+    let value;
+
+    if (role === 'Student') {
+      const projectId = await ProjectMember.findAll({
+        attributes: ['ProjectID'],
+        where: {
+          StudentID: userID, // Assuming StudentID is the correct field for comparison
+        },
+      });
+
+      if (projectId.length > 0) {
+        value = projectId[0].ProjectID;
+      } else {
+        return res.status(404).json({ message: "No projects found for the given student" });
       }
-    })
-    const value = projectId[0].ProjectID;
+    } else {
+      value = userID;
+    }
+
     const data = await sequelize.query(
       'SELECT * FROM Projects AS p ' +
       'JOIN ProjectMembers AS pm ON p.ProjectID = pm.ProjectID ' +
       'JOIN Students AS s ON pm.StudentId=s.AdmissionNumber ' +
       'WHERE pm.ProjectID = :ProjectID',
       {
-        replacements: {ProjectID:value},
+        replacements: { ProjectID: value },
         type: sequelize.QueryTypes.SELECT,
       }
     );
@@ -208,7 +221,34 @@ router.get("/pdSpecific/:admissionNumber",async(req,res)=>{
     console.error("Error while fetching the data:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-})
+});
+router.post("/changeprojectStatus/:projectID", async (req, res) => {
+  const projectId = req.params.projectID;
+  // const { title, abstract } = req.body;
+
+  try {
+    const [updatedRows] = await Project.update(
+      {
+        Status:'Approved'
+      
+      },
+      {
+        where: { ProjectID: projectId }
+      }
+    );
+
+    
+
+    if (updatedRows > 0) {
+      res.status(200).json({ message: "Data added successfully" });
+    } else {
+      res.status(404).json({ message: "Project not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 
 

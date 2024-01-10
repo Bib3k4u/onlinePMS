@@ -30,7 +30,7 @@ const Project = (sequelize) => {
           key: "TeacherID",
         },
       },
-      CurrentStatus: {
+      Status: {
         type: DataTypes.STRING,
         allowNull: false,
       },

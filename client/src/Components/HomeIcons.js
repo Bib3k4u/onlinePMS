@@ -11,7 +11,7 @@ function HomeIcons(props) {
         <img src={props.src} alt='data' width={100} className='rounded-full bg-bgBlueDark'/>
         <label className='text-xl '>
         {props.title}
-            </label>
+    </label>
     </div>
   )
 }

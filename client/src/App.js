@@ -7,6 +7,7 @@ import AddStudent from './Pages/Admin/AddStudent';
 import AddTeacher from './Pages/Admin/AddTeacher';
 import CreateProject from './Pages/Student/CreateProject';
 import MyProject from './Pages/Student/MyProject';
+import ProjectToGuide from './Pages/Teacher/ProjectToGuide';
 
 const isAuthenticated = () => {
   const loginStatus = localStorage.getItem('isLogedIn');
@@ -45,8 +46,12 @@ const App = () => {
         <Route path="/p/Home" element={<PrivateRoute element={<Home />} requiredRoles={['Admin']} />} />
         <Route path="/a/addStudent" element={<PrivateRoute element={<AddStudent />} requiredRoles={['Admin']} />} />
         <Route path="/a/addTeacher" element={<PrivateRoute element={<AddTeacher />} requiredRoles={['Admin']} />} />
-        <Route path="/project/createProject" element={<PrivateRoute element={<CreateProject />} requiredRoles={['Student', 'Admin', 'Guide']} />} />
-        <Route path="/projects/myProject" element={<PrivateRoute element={<MyProject />} requiredRoles={['Student', 'Admin', 'Guide']} />} />
+        <Route path="/project/createProject" element={<PrivateRoute element={<CreateProject />} requiredRoles={['Student', 'Admin', 'Teacher']} />} />
+        <Route path="/projects/myProject" element={<PrivateRoute element={<MyProject />} requiredRoles={['Student', 'Admin', 'Teacher']} />} />
+        <Route path="/projects/myProject" element={<PrivateRoute element={<MyProject />} requiredRoles={['Student', 'Admin', 'Teacher']} />} />
+        <Route path="/g/allProjects" element={<PrivateRoute element={<ProjectToGuide />} requiredRoles={['Admin', 'Teacher']} />} />
+        <Route path="/r/allProjects" element={<PrivateRoute element={<ProjectToGuide />} requiredRoles={['Admin', 'Teacher']} />} />
+
 
         <Route path="/forbidden" element={<Forbidden />} />
       </Routes>

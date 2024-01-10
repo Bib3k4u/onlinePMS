@@ -10,6 +10,7 @@ const ProjectMember = require("../models/ProjectMember")(sequelize);
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const Teacher = require("./../models/Teacher")(sequelize);
+const Project = require('./../models/ProjectList')(sequelize);
 
 router.get("/allTeacher", async (req, res) => {
   try {
@@ -123,5 +124,27 @@ router.put("/updateMarks/:projectID", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+router.get('/guideProjects/:guideID',async(req,res)=>{
+  const guideId = req.params.guideID;
+
+  try{
+    const response = await Project.findAll({
+        attributes:['ProjectID'],
+        where:{
+          GuideID:guideId,
+        }
+    })
+    if(response.length>0)
+    {
+      return res.status(200).json(response);
+    }
+    res.status(401).json({message:'Data not found'});
+
+  }catch(error)
+  {
+    res.status(500).json({message:'Internal server error'})
+  }
+})
 
 module.exports = router;

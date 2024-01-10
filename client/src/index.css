@@ -49,3 +49,18 @@
 
 
 
+.comeDown{
+    animation:cd 1s ease-out ;
+}
+
+@keyframes cd {
+    0%{
+        transform: translateY(0);
+    }
+    50%{
+        transform: translateY(10px);
+    }
+    100%{
+        transform: translatY(0);
+    }
+}
