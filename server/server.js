@@ -12,7 +12,7 @@ const Teacher = require("./models/Teacher")(sequelize);
 const Admin = require('./models/Admin')(sequelize);
 const Task = require('./models/Task')(sequelize);
 const Project = require('./models/ProjectList')(sequelize);
-
+const ProjectDocument = require('./models/ProjectDocument')(sequelize);
 
 const studentRoute = require('./routes/StudentRoutes');
 const TeacherRoute = require('./routes/TeacherRoutes');

@@ -8,6 +8,7 @@ import AddTeacher from './Pages/Admin/AddTeacher';
 import CreateProject from './Pages/Student/CreateProject';
 import MyProject from './Pages/Student/MyProject';
 import ProjectToGuide from './Pages/Teacher/ProjectToGuide';
+import ProjectToReview from './Pages/Teacher/ProjectToReview';
 
 const isAuthenticated = () => {
   const loginStatus = localStorage.getItem('isLogedIn');
@@ -50,8 +51,8 @@ const App = () => {
         <Route path="/projects/myProject" element={<PrivateRoute element={<MyProject />} requiredRoles={['Student', 'Admin', 'Teacher']} />} />
         <Route path="/projects/myProject" element={<PrivateRoute element={<MyProject />} requiredRoles={['Student', 'Admin', 'Teacher']} />} />
         <Route path="/g/allProjects" element={<PrivateRoute element={<ProjectToGuide />} requiredRoles={['Admin', 'Teacher']} />} />
-        <Route path="/r/allProjects" element={<PrivateRoute element={<ProjectToGuide />} requiredRoles={['Admin', 'Teacher']} />} />
-
+        <Route path="/r/allProjects" element={<PrivateRoute element={<ProjectToReview />} requiredRoles={['Admin', 'Teacher']} />} />
+        
 
         <Route path="/forbidden" element={<Forbidden />} />
       </Routes>

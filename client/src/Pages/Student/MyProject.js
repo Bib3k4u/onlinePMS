@@ -7,6 +7,8 @@ import { useLocation } from "react-router-dom";
 import Approve from "../Teacher/Components/Approve";
 import { useNavigate } from "react-router-dom";
 import AddTitle from "./Components/AddTitle";
+import DocumentStatus from "./Components/DocumentStatus";
+import UpdateMarks from "../Teacher/Components/UpdateMarks";
 function MyProject(props) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -15,7 +17,7 @@ function MyProject(props) {
   const [isClicked, setIsClicked] = useState(false);
   const [selectedAdmissionNumber, setSelectedAdmissionNumber] = useState("");
 
-  const [roleId,setRoleID] = useState("");
+  // const [roleId,setRoleID] = useState("");
 
   const [addClick, setaddClick] = useState();
   const handleSelectChange = (event) => {
@@ -27,26 +29,25 @@ function MyProject(props) {
     admissionNumber = JSON.parse(userData);
   }
   console.log(admissionNumber);
- 
+
   const [studentData, setStudentData] = useState();
   let myData;
-  const[userID,setUserID] = useState();
+  const [userID, setUserID] = useState();
+  const yourData = location.state && location.state.ProjectId;
+  myData = yourData;
+  const roleId = location.state && location.state.roleID;
+  //  console.log(roleValue);
+  // / Set userID based on role
+  let userI;
+  if (sessionStorage.getItem("role") === "Student") {
+    userI = admissionNumber && admissionNumber.data[0].AdmissionNumber;
+  } else if (sessionStorage.getItem("role") === "Teacher") {
+    userI = myData;
+  }
+  console.log(userI);
   useEffect(() => {
     // Access the passed data
-    const yourData = location.state && location.state.ProjectId;
-    myData = yourData;
-    const roleValue = location.state && location.state.roleID;
-    setRoleID(roleValue);
-    // Set userID based on role
-   let userI;
-    if (sessionStorage.getItem("role") === "Student") {
-     userI= admissionNumber && admissionNumber.data[0].AdmissionNumber;
-      setUserID(userI);
-    } else if (sessionStorage.getItem("role") === "Teacher") {
-      userI = myData;
-      setUserID(userI);
-    }
-  
+
     // Fetch project data based on userID and role
     const getProjectData = async () => {
       try {
@@ -60,22 +61,18 @@ function MyProject(props) {
         console.error("Error fetching project data:", error);
         // Handle errors as needed
       }
-      
     };
-   
+
     // Check if userID and role are defined before making the request
-    
-    if (userID && sessionStorage.getItem("role")) {
-      getProjectData();
-    }
-  }, [userID]);
-  
+
+    getProjectData();
+  }, [userI]);
+ 
 
   const handleAddMember = async () => {
-  
     try {
       // Replace with the actual admission number
-    
+
       const response = await axios.post(
         `http://localhost:3001/projects/addStudnets/${projectData[0].ProjectID}`,
         {
@@ -87,57 +84,71 @@ function MyProject(props) {
             "Content-Type": "application/json",
           },
         }
-      )
-
-
+      );
+      setSelectedAdmissionNumber("");
+      setIsClicked(false);
       const updatedProjectData = await axios.get(
-        `http://localhost:3001/projects/pdSpecific/?userID=${userID}&role=${sessionStorage.getItem("role")}`
+        `http://localhost:3001/projects/pdSpecific/?userID=${userI}&role=${sessionStorage.getItem(
+          "role"
+        )}`
       );
       setprojectData(updatedProjectData.data.data);
 
       // Reset the form or any other state if needed
-      setSelectedAdmissionNumber("");
-      setIsClicked(false);
-      
+    
     } catch (error) {
       // Handle errors
       console.error("Error adding member:", error);
     }
-
-    
   };
-;
-  const handleAddTtile = async(data) => {
-    try{
-    const updatedProjectData = await axios.get(
-      `http://localhost:3001/projects/pdSpecific/?userID=${userID}&role=${sessionStorage.getItem("role")}`
-    );
-    
+  const handleAddTtile = async (data) => {
+    try {
+      const updatedProjectData = await axios.get(
+        `http://localhost:3001/projects/pdSpecific/?userID=${userI}&role=${sessionStorage.getItem(
+          "role"
+        )}`
+      );
 
-    setaddClick(0);
-    setprojectData(updatedProjectData.data.data);
+      setaddClick(0);
+      setprojectData(updatedProjectData.data.data);
+    } catch (error) {
+      console.log(error);
     }
-    catch(error)
-      {
-        console.log(error)
-      }
   };
+  const handleUpdateMarks = async(data)=>{
+   
+      try {
+        const updatedProjectData = await axios.get(
+          `http://localhost:3001/projects/pdSpecific/?userID=${userID}&role=${sessionStorage.getItem(
+            "role"
+          )}`
+        );
+  
+        setprojectData(updatedProjectData.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    
+  }
 
-
-
-  const handleClick = async() => {
-    try{
-      const response  = await axios.get('http://localhost:3001/s/studentNotRegistered');
+  const handleClick = async (index) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3001/s/studentNotRegistered"
+      );
       setStudentData(response.data.data);
-    }catch(error)
-    {
+    } catch (error) {
       console.log("error");
     }
-    setIsClicked(true);
+    const newClickedCards = [...clickedCards];
+    newClickedCards[index] = !newClickedCards[index]; // Toggle the clicked state
+    setClickedCards(newClickedCards);
   };
   const handleAddClick = (value) => {
     setaddClick(value);
-  }
+  };
+  const [clickedCards, setClickedCards] = useState(Array(  projectData && projectData[0] && projectData[0].ProjectNumber).fill(false));
+
   const renderCards = () => {
     const numberOfCards =
       projectData && projectData[0] && projectData[0].ProjectNumber;
@@ -148,6 +159,8 @@ function MyProject(props) {
 
     const cards = [];
     for (let i = 0; i < numberOfCards; i++) {
+      const isCardClicked = clickedCards[i];
+
       const cardContent =
         i < projectData.length ? (
           <div className="flex flex-col gap-2">
@@ -165,13 +178,13 @@ function MyProject(props) {
           </div>
         ) : (
           <p>
-            {!isClicked && (
-              <button onClick={handleClick}>
+            {!isCardClicked && (
+              <button onClick={()=>handleClick(i)}>
                 <PlusCircle size={100} strokeWidth={1} />
                 Add member
               </button>
             )}
-            {isClicked && (
+            {isCardClicked && (
               <div>
                 <select
                   value={selectedAdmissionNumber}
@@ -208,31 +221,38 @@ function MyProject(props) {
     return cards;
   };
 
-  console.log(projectData);
+  // console.log(projectData);
   return (
     <Layouts>
       <div>
         <ToastContainer />
         <div className="text-center bg-bgBlueDark text-white text-3xl rounded-2xl p-2 relative">
           <h1>{projectData && projectData[0].ProjectID}</h1>
-        <div className="absolute top-2 right-2 flex flex-row gap-4">
-          <div
-            className={`flex justify-center items-center gap-2 ${
-              projectData && projectData[0].Status === "Pending"
-                ? "bg-red-500"
-                : "bg-green-500"
-            } p-1 rounded-xl pl-2 pr-2 pb-2 text-white`}
-          >
+          <div className="absolute top-2 right-2 flex flex-row gap-4">
             <div
-              className={`bg-white rounded-full `}
-              style={{ width: "10px", height: "10px" }}
-            ></div>
-            <p className="text-base">{projectData && projectData[0].Status}</p>
-       
-          </div>
-            {roleId==='Guide'&&projectData && projectData[0].Status === "Pending" &&<>
-            <Approve  projectId={projectData&&projectData[0].ProjectID}/>
-            </>}
+              className={`flex justify-center items-center gap-2 ${
+                projectData && projectData[0].Status === "Pending"
+                  ? "bg-red-500"
+                  : "bg-green-500"
+              } p-1 rounded-xl pl-2 pr-2 pb-2 text-white`}
+            >
+              <div
+                className={`bg-white rounded-full `}
+                style={{ width: "10px", height: "10px" }}
+              ></div>
+              <p className="text-base">
+                {projectData && projectData[0].Status}
+              </p>
+            </div>
+            {roleId === "Guide" &&
+              projectData &&
+              projectData[0].Status === "Pending" && (
+                <>
+                  <Approve
+                    projectId={projectData && projectData[0].ProjectID}
+                  />
+                </>
+              )}
           </div>
         </div>
         <div className="flex flex-col md:flex-row lg:flex-row items-center w-full justify-around gap-20 mt-10">
@@ -276,8 +296,14 @@ function MyProject(props) {
           </div>
         </div>
         {addClick === 1 && (
-          <AddTitle onClick={handleAddTtile} projectId={projectData&&projectData[0].ProjectID} />
+          <AddTitle
+            onlick={handleAddTtile}
+            projectId={projectData && projectData[0].ProjectID}
+          />
         )}
+        <DocumentStatus projectId={userI} />
+
+        {roleId === "Reveiwer" && <UpdateMarks projectId={userI} onlick={handleUpdateMarks}/>}
       </div>
     </Layouts>
   );

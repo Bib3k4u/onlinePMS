@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import axios from 'axios';
 import {toast} from 'react-toastify';
-function AddTitle({projectId,onClick}) {
+function AddTitle({projectId,onlick}) {
     const [title, setTitle] = useState("");
     const [abstract, setAbstract] = useState("");
     console.log(projectId);
@@ -31,7 +31,7 @@ function AddTitle({projectId,onClick}) {
             console.log(error);
           }
         // Call the callback function provided by the parent
-       onClick(0);
+       onlick(0);
       };
   return (
     <div className="w-full flex justify-center items-center mt-5  transition-all ease-in-out duration-300 comeDown">

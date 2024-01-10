@@ -6,9 +6,11 @@ const { Sequelize, Op } = require("sequelize");
 
 const multer = require("multer");
 const xlsx = require("xlsx");
-const Student = require("../models/StudentList");
+const Student = require("../models/StudentList")(sequelize);
+const ProjectDocument = require("../models/ProjectDocument")(sequelize);
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const Teacher = require('../models/Teacher')(sequelize);
 const Project = require("./../models/ProjectList")(sequelize);
 const ProjectMember = require("./../models/ProjectMember")(sequelize);
 const isAbleToCreateProject = async (admissionNumber) => {
@@ -97,13 +99,20 @@ router.post("/create", async (req, res) => {
     {
       return res.status(501).json({message:'You are already registered with group id',projectId:data})
     }
+
     // Assuming you have a function to get the current year and semester
     const tempValue = await getLastProjectId(year, semester);
+    
+    const [guide, reviewer] = await Teacher.findAll({
+      order: Sequelize.literal('RAND()'),
+      limit: 2,
+    });
+   
     const project = await Project.create({
       ProjectID: tempValue,
       ProjectNumber:members ,
-      GuideID: "GUSCSE1010339",
-      ReviewerID: "GUSCSE1010339",
+      GuideID: guide.dataValues.TeacherID,
+      ReviewerID:reviewer.dataValues.TeacherID,
       Status: "Pending",
       Year: year,
       Semester: semester,
@@ -120,8 +129,10 @@ router.post("/create", async (req, res) => {
       
       // Add other group details as needed
     });
-   console.log(project);
-   console.log(group);
+    const document = await ProjectDocument.create({
+      ProjectID:tempValue,
+    })
+  
     res.status(200).json({ message: "Project and group created successfully", tempValue });
   } catch (error) {
     console.error("Error creating project and group:", error);
@@ -154,32 +165,7 @@ router.post("/addStudnets/:projectID", async (req, res) => {
   }
 });
 
-router.post("/addprojectTitle/:projectID", async (req, res) => {
-  const projectId = req.params.projectID;
-  const { title, abstract } = req.body;
 
-  try {
-    const [updatedRows] = await Project.update(
-      {
-        ProjectTitle: title,
-        ProjectAbstract: abstract
-      },
-      {
-        where: { ProjectID: projectId }
-      }
-    );
-
-    
-
-    if (updatedRows > 0) {
-      res.status(200).json({ message: "Data added successfully",title,abstract });
-    } else {
-      res.status(404).json({ message: "Project not found" });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 router.get("/pdSpecific", async (req, res) => {
   const userID = req.query.userID;
@@ -249,6 +235,78 @@ router.post("/changeprojectStatus/:projectID", async (req, res) => {
   }
 });
 
+router.get('/groupData/:projectId',async(req,res)=>{
+  const projectId = req.params.projectId;
+  try{
+  const response = await ProjectMember.findAll({
+    where:{ProjectID:projectId}
+  });
+  if(response)
+  {
+    res.status(200).json(response);
+  }
+  }catch(error)
+  {
+    res.status(501).json({message:'Internal server Error'})
+  }
+})
+//ProjectDocuments
+
+router.get('/allDocument',async(req,res)=>{
+  try{
+    const response = await ProjectDocument.findAll({});
+    if(response)
+    {
+     return  res.status(200).json(response)
+    }
+    res.status(401).json({message:'unable to fetch the data'});
+  }catch(error)
+  {
+    res.status(501).json({message:'Internal server Error'});
+  }
+})
+
+router.get('/documentDetails/:projectID',async(req,res)=>{
+     const projectId = req.params.projectID;
+     try{
+      const response = await ProjectDocument.findAll({
+        where:{
+            ProjectID:projectId,
+        }
+      })
+      if(response)
+      {
+        return res.status(200).json(response);
+      }
+      res.status(401).json({message:'unable to fetch'});
+     }catch(error)
+     {
+        res.status(501).json({message:'Internal server Error'});
+     }
+})
+router.post("/addprojectTitle/:projectID", async (req, res) => {
+  const projectId = req.params.projectID;
+  const { title, abstract } = req.body;
+
+  try {
+    const [updatedRows] = await ProjectDocument.update(
+      {
+        ProjectTitle: title,
+        ProjectAbstract: abstract
+      },
+      {
+        where: { ProjectID: projectId }
+      }
+    );
+    if (updatedRows > 0) {
+      res.status(200).json({ message: "Data added successfully",title,abstract });
+    } else {
+      res.status(404).json({ message: "Project not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 
 

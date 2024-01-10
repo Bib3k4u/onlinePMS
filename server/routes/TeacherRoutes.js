@@ -105,25 +105,35 @@ router.delete("/dlt-teacher/:teacherId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 router.put("/updateMarks/:projectID", async (req, res) => {
   const projectId = req.params.projectID;
-
-  const { marks,admissionNumber} = req.body;
+  const { marks, admissionNumber, examName } = req.body;
+  console.log(examName);
 
   try {
-    // Your logic to update marks for the specified project and teacher
-    // Example:
-    const updatedRow = await ProjectMember.update(
-      { Review1Marks:marks },
-      { where: { ProjectID: projectId, StudentID: admissionNumber } }
-    );
+    const [updatedRow] = await sequelize.query(
+      `UPDATE ProjectMembers SET ${examName} = :marks WHERE ProjectID = :projectId AND StudentID = :admissionNumber;`, {
+      replacements: {
+        marks,
+        projectId,
+        admissionNumber,
+      },
+    });
 
-    res.status(200).json({ message: "Marks updated successfully" });
+    console.log(updatedRow);
+
+    if (updatedRow) {
+      return res.status(200).json({ message: "Marks updated successfully" });
+    }
+    res.status(404).json({ message: "Unable to update" });
   } catch (error) {
     console.error("Error updating marks:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 router.get('/guideProjects/:guideID',async(req,res)=>{
   const guideId = req.params.guideID;
@@ -133,6 +143,27 @@ router.get('/guideProjects/:guideID',async(req,res)=>{
         attributes:['ProjectID'],
         where:{
           GuideID:guideId,
+        }
+    })
+    if(response.length>0)
+    {
+      return res.status(200).json(response);
+    }
+    res.status(401).json({message:'Data not found'});
+
+  }catch(error)
+  {
+    res.status(500).json({message:'Internal server error'})
+  }
+})
+router.get('/reviewProjects/:reveiwerId',async(req,res)=>{
+  const reveiwerId = req.params.reveiwerId;
+
+  try{
+    const response = await Project.findAll({
+        attributes:['ProjectID'],
+        where:{
+          ReviewerID:reveiwerId,
         }
     })
     if(response.length>0)

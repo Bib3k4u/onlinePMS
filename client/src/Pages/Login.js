@@ -62,7 +62,7 @@ function Login() {
         console.log(user.role);
         const r = user.role === 'Student' ? "/s/Home" : user.role === 'Teacher' ? "/t/Home" : "/Home";
         console.log(r);
-        navigate(r);
+        navigate(r,{replace:true});
       } else {
         localStorage.setItem("isLogedIn", false);
         setUser({
