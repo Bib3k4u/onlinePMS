@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import AddTitle from "./Components/AddTitle";
 import DocumentStatus from "./Components/DocumentStatus";
 import UpdateMarks from "../Teacher/Components/UpdateMarks";
+import AddDocumentLink from "./Components/AddDocumentLink";
 function MyProject(props) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -185,10 +186,11 @@ function MyProject(props) {
               </button>
             )}
             {isCardClicked && (
-              <div>
+              <div className="flex flex-col justify-center items-center gap-5">
                 <select
                   value={selectedAdmissionNumber}
                   onChange={handleSelectChange}
+                  className="p-4 border border-black upCard"
                 >
                   <option value="" disabled>
                     Select Admission Number
@@ -197,12 +199,13 @@ function MyProject(props) {
                     <option
                       key={student.AdmissionNumber}
                       value={student.AdmissionNumber}
+                      style={{marginTop:"5px"}}
                     >
                       {`${student.AdmissionNumber} - ${student.Name}`}
                     </option>
                   ))}
                 </select>
-                <button onClick={handleAddMember}>Add member</button>
+                <button onClick={handleAddMember} className="bg-bgBlueDark p-4 text-md text-white rounded-xl hoverButtons">Add member</button>
               </div>
             )}
           </p>
@@ -282,13 +285,13 @@ function MyProject(props) {
               >
                 Add title and Abstract
               </button>
-              <button className="w-full p-2 bg-bgBlueDark text-white rounded-xl">
+              <button className="w-full p-2 bg-bgBlueDark text-white rounded-xl" onClick={()=>handleAddClick(3)}>
                 Add PPT
               </button>
-              <button className="w-full p-2 bg-bgBlueDark text-white rounded-xl">
+              <button className="w-full p-2 bg-bgBlueDark text-white rounded-xl" onClick={()=>handleAddClick(2)}>
                 Add Project Report
               </button>
-              <button className="w-full p-2 bg-bgBlueDark text-white rounded-xl">
+              <button className="w-full p-2 bg-bgBlueDark text-white rounded-xl" onClick={()=>handleAddClick(4)}>
                 {" "}
                 Project Link
               </button>
@@ -301,6 +304,9 @@ function MyProject(props) {
             projectId={projectData && projectData[0].ProjectID}
           />
         )}
+        {addClick>1&&<>
+          <AddDocumentLink onlick={handleAddTtile} documentName={addClick===2?'ProjectReport':addClick===3?'ProjectPresentaion':'ProjectLink'} projectId={projectData && projectData[0].ProjectID}/>
+        </>}
         <DocumentStatus projectId={userI} />
 
         {roleId === "Reveiwer" && <UpdateMarks projectId={userI} onlick={handleUpdateMarks}/>}

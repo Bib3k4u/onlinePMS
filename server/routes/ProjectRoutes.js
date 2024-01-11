@@ -307,7 +307,26 @@ router.post("/addprojectTitle/:projectID", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
+router.post('/addProjectDocuemnt/:projectId',async(req,res)=>{
+  const{documentName,Link} = req.body;
+  const projectId = req.params.projectId;
+  try{
+  const [updatedRow] = await sequelize.query(
+    `UPDATE ProjectDocuments SET ${documentName} = :Link WHERE ProjectID = :projectId;`, {
+    replacements: {
+      Link,
+      projectId,
+    },
+  });
+  if (updatedRow) {
+    return res.status(200).json({ message: "Document updated successfully" });
+  }
+  res.status(404).json({ message: "Unable to update Document" });
+}catch(error)
+{console.error("Error updating marks:", error);
+res.status(500).json({ error: "Internal Server Error" });console.log('error');
+}
+})
 
 
 module.exports = router;

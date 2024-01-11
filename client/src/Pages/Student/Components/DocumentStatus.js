@@ -5,7 +5,7 @@ function DocumentStatus(props) {
   const [data,setData] = useState();
    
 
- const[proejctData,setprojectData] = useState([]);
+  
   useEffect(()=>{
     const getProjectData = async () => {
       try {
@@ -21,7 +21,7 @@ function DocumentStatus(props) {
          {
           console.log("unable to fetch the project Documents");
          }
-        setprojectData(response.data.data);
+        
         
       } catch (error) {
         console.error("Error fetching project data:", error);
@@ -35,6 +35,9 @@ function DocumentStatus(props) {
     getProjectData();
     // getData();
   },[])
+  const onViewFile=(value)=>{
+    window.open(value, '_blank', 'noreferrer');
+  }
   // console.log(data);
   return (
     <div className='mt-10 mx-10'>
@@ -52,7 +55,7 @@ function DocumentStatus(props) {
             <td className="py-2 px-4">1.</td>
             <td className="py-2 px-4">Project Report</td>
             <td className="py-2 px-4">
-            <button className='bg-green-500 p-2 rounded-full text-white flex flex-row gap-2 items-center justify-center' title='View'><ViewIcon color='white' /></button>
+            <button className='bg-green-500 p-2 rounded-full text-white flex flex-row gap-2 items-center justify-center' title='View' onClick={()=>onViewFile(data&&data[0].ProjectReport)}><ViewIcon color='white' /></button>
 
             </td>
             <td className="py-2 px-4">
@@ -64,7 +67,7 @@ function DocumentStatus(props) {
             <td className="py-2 px-4">2.</td>
             <td className="py-2 px-4">Abstract</td>
             <td className="py-2 px-4">
-               <button className='bg-green-500 p-2 rounded-full text-white flex flex-row gap-2 items-center justify-center' title='View'><ViewIcon color='white' /></button>
+               <button className='bg-green-500 p-2 rounded-full text-white flex flex-row gap-2 items-center justify-center' title='View' ><ViewIcon color='white' /></button>
             </td>
             <td className="py-2 px-4">
             {data&&data.length>0&&data[0].ProjectAbstract ==='Not uploaded'?'Not uploaded':'uploaded'}
@@ -75,7 +78,7 @@ function DocumentStatus(props) {
             <td className="py-2 px-4">3.</td>
             <td className="py-2 px-4">Presentation</td>
             <td className="py-2 px-4">
-            <button className='bg-green-500 p-2 rounded-full text-white flex flex-row gap-2 items-center justify-center' title='View'><ViewIcon color='white' /></button>
+            <button className='bg-green-500 p-2 rounded-full text-white flex flex-row gap-2 items-center justify-center' title='View' onClick={()=>onViewFile(data&&data[0].ProjectPresentaion)}><ViewIcon color='white' /></button>
 
               </td>
             <td className="py-2 px-4">
@@ -88,7 +91,7 @@ function DocumentStatus(props) {
             <td className="py-2 px-4">4.</td>
             <td className="py-2 px-4">Project Link</td>
             <td className="py-2 px-4">
-            <button className='bg-green-500 p-2 rounded-full text-white flex flex-row gap-2 items-center justify-center' title='View'><ViewIcon color='white' /></button>
+            <button className='bg-green-500 p-2 rounded-full text-white flex flex-row gap-2 items-center justify-center' title='View' onClick={()=>onViewFile(data&&data[0].ProjectLink)}><ViewIcon color='white' /></button>
 
             </td>
             <td className="py-2 px-4">
@@ -101,7 +104,7 @@ function DocumentStatus(props) {
             <td className="py-2 px-4">5.</td>
             <td className="py-2 px-4">Research Paper</td>
             <td className="py-2 px-4">
-                  <button className='bg-green-500 p-2 rounded-full text-white flex flex-row gap-2 items-center justify-center' title='View'> <ViewIcon color='white' /></button>
+                  <button className='bg-green-500 p-2 rounded-full text-white flex flex-row gap-2 items-center justify-center' title='View' onClick={()=>onViewFile(data&&data[0].ProjectResearchPaper)}> <ViewIcon color='white' /></button>
 
             </td>
             <td className="py-2 px-4">
