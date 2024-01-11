@@ -60,12 +60,23 @@ const CreateProject = () => {
       // Handle error as needed
     }
   };
-
+const[studentData,setStudentData] = useState([]);
   useEffect(() => {
     // This useEffect will run whenever selectedYear or selectedSemester changes
     let visibleSemesters = [];
     let isYearSelected = false;
-  
+    const getData=async()=>{
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/s/studentNotRegistered"
+        );
+        setStudentData(response.data.data);
+      }catch(error)
+      {
+        console.log(error);
+      }
+    }
+   
     // Check if year is selected
     if (selectedYear > 0) {
       isYearSelected = true;
@@ -121,9 +132,25 @@ const CreateProject = () => {
       />
       <div className='flex flex-col w-full'>
             <label className="block text-sm font-semibold mb-2 mt-4">Leader Admission Number:</label>
-            <input className='outline-none border p-2 border-gray-300' type='text' name='admission' placeholder='20SCSE110xx' value={admissionNumber} onChange={(e)=>setAdmissionNumber(e.target.value)}/>
-        </div>
-<div className="mt-4 flex flex-col justify-center">
+            <select
+                  value={admissionNumber}
+                  onChange={(e)=>setAdmissionNumber(e.target.value)}
+                  className="p-4 border border-gray-300 bg-white  outline-none"
+                >
+                  <option value="" disabled>
+                    Select Admission Number
+                  </option>
+                  {studentData.map((student) => (
+                    <option
+                      key={student.AdmissionNumber}
+                      value={student.AdmissionNumber}
+                      style={{marginTop:"5px"}}
+                    >
+                      {`${student.AdmissionNumber} - ${student.Name}`}
+                    </option>
+                  ))}
+                </select>        </div>
+<div className="mt-6 flex flex-col justify-center">
           <h2 className="text-lg flex justify-center font-semibold mb-4 text-black tracking-wider">Select the number of members in the group</h2>
           <div className="gap-5 flex justify-center">
             {[1, 2, 3, 4, 5].map((number) => (

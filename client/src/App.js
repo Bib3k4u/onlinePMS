@@ -11,6 +11,7 @@ import ProjectToGuide from './Pages/Teacher/ProjectToGuide';
 import ProjectToReview from './Pages/Teacher/ProjectToReview';
 import MyGuide from './Pages/Student/MyGuide';
 import MyReviewer from './Pages/Student/MyReviewer';
+import PageNotFound from './Pages/PageNotFound';
 
 const isAuthenticated = () => {
   const loginStatus = localStorage.getItem('isLogedIn');
@@ -63,7 +64,7 @@ const App = () => {
        <Route path="/Rhome" element={<PrivateRoute element={<Home />} requiredRoles={['Admin']} />} />
        <Route path="/Phome" element={<PrivateRoute element={<Home />} requiredRoles={['Admin']} />} />
         <Route path="/forbidden" element={<Forbidden />} />
-
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     
   );
