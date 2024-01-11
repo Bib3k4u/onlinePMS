@@ -9,6 +9,8 @@ import CreateProject from './Pages/Student/CreateProject';
 import MyProject from './Pages/Student/MyProject';
 import ProjectToGuide from './Pages/Teacher/ProjectToGuide';
 import ProjectToReview from './Pages/Teacher/ProjectToReview';
+import MyGuide from './Pages/Student/MyGuide';
+import MyReviewer from './Pages/Student/MyReviewer';
 
 const isAuthenticated = () => {
   const loginStatus = localStorage.getItem('isLogedIn');
@@ -52,9 +54,16 @@ const App = () => {
         <Route path="/projects/myProject" element={<PrivateRoute element={<MyProject />} requiredRoles={['Student', 'Admin', 'Teacher']} />} />
         <Route path="/g/allProjects" element={<PrivateRoute element={<ProjectToGuide />} requiredRoles={['Admin', 'Teacher']} />} />
         <Route path="/r/allProjects" element={<PrivateRoute element={<ProjectToReview />} requiredRoles={['Admin', 'Teacher']} />} />
-        
-
+        <Route path="/projects/myguide" element={<PrivateRoute element={<MyGuide />} requiredRoles={['Student']} />} />
+        <Route path="/projects/myreviewer" element={<PrivateRoute element={<MyReviewer />} requiredRoles={['Student']} />} />
+       {/* Temproty route000 */}
+       <Route path="/Shome" element={<PrivateRoute element={<Home />} requiredRoles={['Admin']} />} />
+       <Route path="/Thome" element={<PrivateRoute element={<Home />} requiredRoles={['Admin']} />} />
+       <Route path="/Ghome" element={<PrivateRoute element={<Home />} requiredRoles={['Admin']} />} />
+       <Route path="/Rhome" element={<PrivateRoute element={<Home />} requiredRoles={['Admin']} />} />
+       <Route path="/Phome" element={<PrivateRoute element={<Home />} requiredRoles={['Admin']} />} />
         <Route path="/forbidden" element={<Forbidden />} />
+
       </Routes>
     
   );

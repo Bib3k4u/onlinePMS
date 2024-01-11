@@ -16,7 +16,9 @@ function Home() {
     const { pathname } = location;
 
     if (pathname.startsWith('/Home')) {
-      setfilteredHomeDatas(homeData);
+      const temp = homeData.filter((item) => item.category.includes('Admin'));
+
+      setfilteredHomeDatas(temp);
     } else if (pathname === '/s/Home') {
       const temp = homeData.filter((item) => item.category.includes('Student'));
       setfilteredHomeDatas(temp);
@@ -35,6 +37,26 @@ function Home() {
     }
     else if (pathname === '/t/Home') {
       const temp = homeData.filter((item) => item.category.includes('Teacher'));
+      setfilteredHomeDatas(temp);
+    }
+    else if(pathname==='/Shome'){
+      const temp = homeData.filter((item)=>item.relatedTo.includes('Student'));
+      setfilteredHomeDatas(temp);
+    }
+    else if(pathname==='/Thome'){
+      const temp = homeData.filter((item)=>item.relatedTo.includes('Teacher'));
+      setfilteredHomeDatas(temp);
+    }
+    else if(pathname==='/Ghome'){
+      const temp = homeData.filter((item)=>item.relatedTo.includes('Guide'));
+      setfilteredHomeDatas(temp);
+    }
+    else if(pathname==='/Rhome'){
+      const temp = homeData.filter((item)=>item.relatedTo.includes('Reviewer'));
+      setfilteredHomeDatas(temp);
+    }
+    else if(pathname==='/Phome'){
+      const temp = homeData.filter((item)=>item.relatedTo.includes('Projects'));
       setfilteredHomeDatas(temp);
     }
   };
