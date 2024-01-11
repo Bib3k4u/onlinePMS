@@ -37,9 +37,7 @@ body{
     }
 }
 @media only screen and (max-width: 440px) {
-    .sidebar{
-        position: fixed;
-    }
+    
     .open {
         margin-left: 10px;
     }
@@ -80,3 +78,6 @@ to{
     }
  
 }
+
+
+
