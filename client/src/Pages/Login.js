@@ -1,6 +1,6 @@
 import React, { useRef, useState,useEffect } from "react";
 import Select from "react-select";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Navigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -62,7 +62,8 @@ function Login() {
         console.log(user.role);
         const r = user.role === 'Student' ? "/s/Home" : user.role === 'Teacher' ? "/t/Home" : "/Home";
         console.log(r);
-        navigate(r,{replace:true});
+        // <Navigate to={r} replace />
+        navigate(r);
       } else {
         localStorage.setItem("isLogedIn", false);
         setUser({

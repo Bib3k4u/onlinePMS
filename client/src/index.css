@@ -66,3 +66,17 @@ body{
         transform: translatY(0);
     }
 }
+
+.hoverButtons:hover{
+    animation: changeColor 2s linear ;
+}
+
+@keyframes changeColor {
+    from{
+            background-color: #2e5caf;
+    }
+to{
+        background-color: gray;
+    }
+ 
+}
